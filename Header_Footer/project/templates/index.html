@@ -1,0 +1,27 @@
+<!-- index.html -->
+{% extends 'base.html' %}
+
+{% block title %}Trang chủ - NexTech{% endblock %}
+
+{% block content %}
+    <main class="content-wrapper">
+        <div class="container">
+            <section class="hero-section">
+                <div class="banner-placeholder">
+                    <h2>BIG SALES - TECH WEEK</h2>
+                    <p>Giảm đến 50% cho các dòng linh kiện PC cao cấp</p>
+                </div>
+            </section>
+
+            <section class="products-section">
+                <div class="sec-header">
+                    <h2>SẢN PHẨM NỔI BẬT</h2>
+                    <a href="#" class="view-all">Xem tất cả ></a>
+                </div>
+                <div class="product-grid" id="productContainer">
+                    <!-- Sản phẩm sẽ được render ở đây -->
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}

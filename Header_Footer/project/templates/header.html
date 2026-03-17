@@ -1,0 +1,70 @@
+<!-- header.html -->
+<div class="top-banner">
+    <img src="{{ url_for('static', filename='images/1.png') }}" alt="Chương trình khuyến mãi Mua Laptop Tặng Màn Hình OLED 240Hz" class="top-banner-img">
+</div>
+
+<header class="main-header">
+    <div class="container header-content">
+        <div class="logo">
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/LOGO.png') }}" alt="NexTech - Trang chủ" class="logo-img">
+            </a>
+        </div>
+
+        <div class="category-btn">
+            <i class="fas fa-bars"></i> Danh mục
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?">
+            <button type="submit" id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="header-tools">
+            <a href="tel:19001234" class="tool-item">
+                <i class="fas fa-phone-alt"></i>
+                <div class="text">
+                    <span>Hotline</span>
+                    <strong>1900.1234</strong>
+                </div>
+            </a>
+
+            <a href="/he-thong-cua-hang" class="tool-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="text">
+                    <span>Hệ thống</span>
+                    <strong>cửa hàng</strong>
+                </div>
+            </a>
+
+            <a href="/tra-cuu-don-hang" class="tool-item">
+                <i class="fas fa-box"></i>
+                <div class="text">
+                    <span>Tra cứu</span>
+                    <strong>đơn hàng</strong>
+                </div>
+            </a>
+
+            <a href="/login" class="login-btn">
+                <i class="fas fa-user-circle"></i>
+                <span>Đăng nhập</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<nav class="sub-nav">
+    <div class="container sub-nav-flex">
+        <a href="#" class="nav-link"><i class="fa-solid fa-tags"></i> Mua PC tặng màn 240Hz</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-fire-flame-curved"></i> Hot Deal | Laptop</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-newspaper"></i> Tin tức</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-screwdriver-wrench"></i> Dịch vụ kỹ thuật</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-rotate"></i> Thu cũ đổi mới</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-shield-check"></i> Tra cứu bảo hành</a>
+    </div>
+</nav>

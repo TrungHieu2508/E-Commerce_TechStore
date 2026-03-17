@@ -1,0 +1,366 @@
+/* ==========================================
+   1. RESET & CƠ BẢN
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+ul { list-style: none; }
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s ease;
+}
+
+/* ==========================================
+   2. TOP BANNER (ẢNH TRÀN TRANG)
+   ========================================== */
+.top-banner {
+    background-color: transparent;
+    text-align: center;
+    overflow: hidden;
+}
+
+.top-banner-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Ẩn các phần tử cũ không dùng */
+.top-banner .badge, 
+.top-banner .promo-text { 
+    display: none; 
+}
+
+/* ==========================================
+   3. MAIN HEADER
+   ========================================== */
+.main-header {
+    background-color: #1a234a;
+    color: white;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo "Floating" Style */
+.logo {
+    position: relative;
+    width: 200px;
+}
+
+.logo a {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.logo-img {
+    max-height: 90px;
+    margin-bottom: 10px;
+    width: auto;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    flex-grow: 0.6;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0 20px;
+}
+
+.search-bar input {
+    border: none;
+    padding: 10px 15px;
+    width: 100%;
+    outline: none;
+}
+
+.search-bar button {
+    border: none;
+    background: #d7d7d7;
+    padding: 0 20px;
+    cursor: pointer;
+    color: #1a234a;
+    transition: 0.3s;
+}
+
+.search-bar button:hover {
+    background: #c0c0c0;
+}
+
+/* Header Tools & Buttons */
+.header-tools {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.category-btn, .login-btn {
+    background-color: #007bff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+}
+
+.tool-item i { font-size: 18px; color: #007bff; }
+
+.tool-item strong {
+    display: block;
+    font-size: 11px;
+}
+
+/* ==========================================
+   4. NAVIGATION (SUB NAV)
+   ========================================== */
+.sub-nav {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 12px 0;
+}
+
+.sub-nav-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-link {
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #444;
+}
+
+.nav-link i { color: #666; font-size: 15px; }
+
+.nav-link:hover { color: #007bff; }
+
+.sep {
+    width: 1px;
+    height: 18px;
+    background: #eee;
+}
+
+/* ==========================================
+   5. CONTENT AREA & HERO
+   ========================================== */
+.content-wrapper {
+    min-height: 400px;
+    padding-bottom: 50px;
+}
+
+.banner-placeholder {
+    height: 300px;
+    background: linear-gradient(135deg, #1a234a 0%, #007bff 100%);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.sec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 20px;
+    border-left: 4px solid #007bff;
+    padding-left: 15px;
+}
+
+.view-all {
+    color: #007bff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* ==========================================
+   6. PRODUCT GRID & CARD
+   ========================================== */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.img-box {
+    height: 160px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.p-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 10px;
+    height: 40px;
+    overflow: hidden;
+    color: #333;
+}
+
+.p-price {
+    color: #d70018;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.btn-buy {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* ==========================================
+   7. FOOTER & SOCIALS
+   ========================================== */
+.main-footer {
+    background-color: white;
+    padding: 50px 0;
+    border-top: 1px solid #eee;
+    margin-top: 50px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.footer-col h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #666;
+}
+
+.blue-text { color: #007bff; font-weight: bold; }
+
+/* Social Section */
+.social-links {
+    margin-top: 60px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.social-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.social-wrapper p {
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+}
+
+.social-wrapper .icons {
+    display: flex;
+    gap: 12px;
+}
+
+.social-wrapper .icons a {
+    color: #555;
+    font-size: 18px;
+}
+
+.social-wrapper .icons a:hover {
+    color: #007bff;
+    transform: translateY(-2px);
+}
+.partner-logo img { margin-top: 20px; max-width: 180px; }
+/* ==========================================
+   8. RESPONSIVE (MOBILE)
+   ========================================== */
+@media (max-width: 992px) {
+    .header-tools, .sep { 
+        display: none; 
+    }
+
+    .footer-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+
+    .sub-nav-flex { 
+        overflow-x: auto; 
+        gap: 20px; 
+        justify-content: flex-start; 
+        padding-bottom: 8px; 
+    }
+
+    .nav-link { 
+        white-space: nowrap; 
+    }
+}
