@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexTech Đăng ký</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .register-container {
+            width: 90%;
+            max-width: 380px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        /* Thương hiệu styling */
+        /* Logo NexTech */
+        .logo {
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 280px;
+            height: auto;
+        }
+
+        /* Tiêu đề */
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #2a348c;
+        }
+
+        .logo-text {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #2a348c;
+            text-align: left;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 0.45em;
+            font-weight: normal;
+            color: #555;
+        }
+
+        /* Tiêu đề chính */
+        h1 {
+            font-size: 2.3em;
+            font-weight: bold;
+            margin-bottom: 35px;
+            color: #000;
+        }
+
+        /* Form styling */
+        form {
+            text-align: left;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #000;
+            font-size: 0.95em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #000;
+            box-sizing: border-box;
+        }
+
+        .input-group input::placeholder {
+            color: #999;
+        }
+
+        /* Nút chính */
+        .primary-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Phân chia styling */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #777;
+            margin: 25px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .divider span {
+            padding: 0 10px;
+            font-size: 0.9em;
+        }
+
+        /* Nút xã hội styling */
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .social-btn.google {
+            background-color: #db4437;
+        }
+
+        .social-btn.facebook {
+            background-color: #3b5998;
+        }
+
+        /* Chân trang styling */
+        footer {
+            font-size: 0.95em;
+            color: #000;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <header>
+            <div class="logo">
+                <a href="./index.html">
+                    <img src="../assets/img/Logo_white.png" alt="NexTech Logo">
+                </a>
+            </div>
+        </header>
+        <main>
+            <h2>Đăng ký</h2>
+            <form>
+                <div class="input-group">
+                    <label for="username">Tên đăng nhập</label>
+                    <input type="text" id="username" placeholder="User Name">
+                </div>
+                <div class="input-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="email">
+                </div>
+                <div class="input-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="tel" id="phone" placeholder="Number phone">
+                </div>
+                <button type="submit" class="primary-btn">Tạo tài khoản</button>
+            </form>
+            <div class="divider">
+                <span>hoặc đăng ký bằng</span>
+            </div>
+            <div class="social-login">
+                <button class="social-btn google">
+                    <span>G+</span> Google
+                </button>
+                <button class="social-btn facebook">
+                    <span>FB</span> Facebook
+                </button>
+            </div>
+        </main>
+        <footer>
+            <p>Bạn đã có tài khoản? <a href="../pages/login.html">Đăng nhập ngay!</a></p>
+        </footer>
+    </div>
+</body>
+</html>
