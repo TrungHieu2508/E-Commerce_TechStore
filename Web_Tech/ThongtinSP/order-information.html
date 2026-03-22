@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận đặt hàng - NexTech</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="/imgs/LOGO1.png" type="image/x-icon">
+    <style>
+        /* 1. LAYOUT CHUNG */
+        .order-flow-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* 2. STEPPER HEADER */
+        .stepper-header {
+            display: flex;
+            align-items: center;
+            background: #fff0f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        .order-product-img { width: 140px; border-radius: 20px; }
+        .steps { display: flex; flex: 1; justify-content: space-around; text-align: center; }
+        .step-item { color: #999; font-size: 13px; font-weight: bold; }
+        .step-item i {
+            display: block;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            background: #ccc;
+            color: #fff;
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            font-size: 16px;
+        }
+        .step-item.active { color: #000; }
+        .step-item.active i { background: #ff0000; }
+
+        /* 3. FORM NHẬP LIỆU */
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .form-section h3 { font-size: 15px; margin: 20px 0 10px; }
+        
+        .input-group-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .input-group-row input, select.form-control {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            outline: none;
+            background: #fff;
+        }
+        .address-detail { background: #f1f1f1; padding: 15px; border-radius: 5px; }
+        .address-detail input { width: 100%; background: transparent; border: none; outline: none; box-sizing: border-box; }
+
+        /* 4. THANH TOÁN & TỔNG KẾT */
+        .payment-method, .success-msg { text-align: center; padding: 30px 0; }
+        .order-summary {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 400px;
+            text-align: left;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+        .summary-item { display: flex; gap: 15px; align-items: center; }
+        .summary-info p { margin: 5px 0; font-size: 14px; }
+        .price-red { color: #ff0000; font-weight: bold; }
+
+        /* 5. NÚT BẤM */
+        .order-footer-btns { display: flex; justify-content: space-between; margin-top: 30px; }
+        .btn-order {
+            padding: 12px 35px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .btn-prev, .btn-next { background: #ff0000; }
+        
+        .finish-state { justify-content: center !important; width: 100%; }
+        .btn-finish {
+            background: linear-gradient(45deg, #ff0000, #cc0000) !important;
+            padding: 15px 60px !important;
+            font-size: 18px !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+            border-radius: 30px !important;
+        }
+        .btn-finish:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4); }
+
+        /* 6. RESPONSIVE */
+        @media (max-width: 600px) {
+            .stepper-header { flex-direction: column; text-align: center; padding: 10px; }
+            .steps { width: 100%; margin-top: 15px; }
+            .step-item { font-size: 11px; }
+            .step-item i { width: 30px; height: 30px; line-height: 30px; font-size: 14px; }
+            .top-banner-img { width: 100%; height: auto; }
+            .input-group-row input { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+        <div class="top-banner">
+            <img src="/imgs/1.png" 
+                alt="Chương trình khuyến mãi Mua Laptop Tặng Màn Hình OLED 240Hz" 
+                class="top-banner-img"
+                loading="lazy">
+        </div>
+    <header class="main-header">
+        <div class="container header-content">
+
+            <div class="logo">
+                <a href="/">
+                    <img src="/imgs/LOGO.png" alt="NexTech - Trang chủ" class="logo-img">
+                </a>
+            </div>
+
+            <div class="category-btn">
+                <i class="fas fa-bars"></i> Danh mục
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?">
+                <button type="submit" id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="header-tools">
+                <a href="tel:19001234" class="tool-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div class="text">
+                        <span>Hotline</span>
+                        <strong>1900.1234</strong>
+                    </div>
+                </a>
+
+                <a href="/he-thong-cua-hang" class="tool-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="text">
+                        <span>Hệ thống</span>
+                        <strong>cửa hàng</strong>
+                    </div>
+                </a>
+
+                <a href="/tra-cuu-don-hang" class="tool-item">
+                    <i class="fas fa-box"></i>
+                    <div class="text">
+                        <span>Tra cứu</span>
+                        <strong>đơn hàng</strong>
+                    </div>
+                </a>
+
+                <a href="/login" class="login-btn">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Đăng nhập</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sub-nav">
+        <div class="container sub-nav-flex">
+            <a href="#" class="nav-link"><i class="fa-solid fa-tags"></i> Mua PC tặng màn 240Hz</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-fire-flame-curved"></i> Hot Deal | Laptop</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-newspaper"></i> Tin tức</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-screwdriver-wrench"></i> Dịch vụ kỹ thuật</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-rotate"></i> Thu cũ đổi mới</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-shield-check"></i> Tra cứu bảo hành</a>
+        </div>
+    </nav>
+
+    <main class="ct-wrapper">
+        <div class="container">
+            <nav id="dynamic-breadcrumb" class="bc-top"></nav>
+            <div class="m-layout">
+                <aside class="side-bn left-side">
+                    <div class="stk-box"><img src="/imgs/Left.png" alt="Side"></div>
+                </aside>
+
+                <section class="page-main">
+                    <div class="order-flow-container">
+                        <div class="stepper-header">
+                            <img id="display-order-img" src="" alt="Product" class="order-product-img">
+                            <div class="steps">
+                                <div class="step-item active" id="st-1"><i class="fas fa-edit"></i>Thông tin</div>
+                                <div class="step-item" id="st-2"><i class="fas fa-credit-card"></i>Thanh toán</div>
+                                <div class="step-item" id="st-3"><i class="fas fa-check-circle"></i>Hoàn tất</div>
+                            </div>
+                        </div>
+
+                        <div class="form-section active" id="step-1">
+                            <h3>Nhập thông tin giao hàng</h3>
+                            <div class="input-group-row">
+                                <input type="text" id="customerName" placeholder="Họ và tên khách hàng">
+                                <input type="text" id="customerPhone" placeholder="Số điện thoại">
+                            </div>
+                            <h3>Địa chỉ giao hàng</h3>
+                            <div class="input-group-row">
+                                <select id="province" class="form-control"><option value="">Chọn Tỉnh/Thành</option></select>
+                                <select id="district" class="form-control"><option value="">Chọn Quận/Huyện</option></select>
+                                <select id="ward" class="form-control"><option value="">Chọn Phường/Xã</option></select>
+                            </div>
+                            <div class="address-detail">
+                                <input type="text" id="detailAddress" placeholder="Số nhà, tên đường...">
+                            </div>
+                        </div>
+
+                        <div class="form-section" id="step-2">
+                            <div class="payment-method">
+                                <i class="fas fa-truck" style="font-size: 50px; color: #ff0000; margin-bottom: 15px;"></i>
+                                <p>Phương thức vận chuyển: <strong>Giao hàng nhanh (Miễn phí)</strong></p>
+                                <p>Phương thức thanh toán: <strong>Thanh toán khi nhận hàng (COD)</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="form-section" id="step-3">
+                            <div class="success-msg">
+                                <i class="fas fa-check-circle" style="font-size: 50px; color: #28a745;"></i>
+                                <h2>Đặt hàng thành công!</h2>
+                                <div id="order-summary-card" class="order-summary"></div>
+                                <p>Cảm ơn bạn đã mua hàng tại NexTech.</p>
+                            </div>
+                        </div>
+
+                        <div class="order-footer-btns">
+                            <button class="btn-order btn-prev" onclick="handlePrev()">Quay lại</button>
+                            <button class="btn-order btn-next" id="mainNextBtn" onclick="handleNext()">Tiếp theo</button>
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="side-bn right-side">
+                    <div class="stk-box"><img src="/imgs/right.png" alt="Side"></div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Về Nexa Tech</h3>
+                <ul>
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Tuyển dụng</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                </ul>
+                <div class="social-links">
+                    <div class="social-wrapper">
+                        <p>HÃY KẾT NỐI VỚI CHÚNG TÔI</p>
+                        <div class="icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-tiktok"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fas fa-users"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Chính sách</h3>
+                <ul>
+                    <li><a href="#">Chính sách bảo hành</a></li>
+                    <li><a href="#">Chính sách giao hàng</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Thông tin</h3>
+                <ul>
+                    <li><a href="#">Hệ thống cửa hàng</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                    <li><a href="#">Hướng dẫn thanh toán</a></li>
+                    <li><a href="#">Hướng dẫn trả góp</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Tổng đài hộ trợ</h3>
+                <ul class="contact-list">
+                    <li>Mua hàng: <span class="blue-text">1900.0000</span></li>
+                    <li>Bảo hành: <span class="blue-text">1900.0001</span></li>
+                    <li>Khiếu nại: <span class="blue-text">1900.0002</span></li>
+                    <li>Email: <span class="blue-text">hihi123@ut.edu.vn</span></li>
+                </ul>
+                <div class="partner-logo">
+                    <img src="/imgs/GHN.png" alt="Giao Hàng Nhanh">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/scripts.js"></script>
+    <script src="/SanPham/product-detail.js"></script>
+    <script>
+        let currentStep = 1;
+        let foundProduct = null;
+        let orderData = { customer: {}, product: {}, orderDate: "" };
+
+        // 1. Khởi tạo sản phẩm
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id'));
+        const displayImg = document.getElementById('display-order-img');
+
+        if (typeof allProducts !== 'undefined') {
+            for (let key in allProducts) {
+                let item = allProducts[key].find(p => p.id === productId);
+                if (item) { foundProduct = item; break; }
+            }
+            if (foundProduct) displayImg.src = foundProduct.img;
+        }
+
+        // 2. Tỉnh/Thành API
+        const provinceSelect = document.getElementById('province');
+        const districtSelect = document.getElementById('district');
+        const wardSelect = document.getElementById('ward');
+
+        fetch('https://provinces.open-api.vn/api/?depth=3')
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(p => provinceSelect.add(new Option(p.name, p.name)));
+                provinceSelect.onchange = () => {
+                    districtSelect.length = 1; wardSelect.length = 1;
+                    const p = data.find(x => x.name === provinceSelect.value);
+                    if (p) p.districts.forEach(d => districtSelect.add(new Option(d.name, d.name)));
+                };
+                districtSelect.onchange = () => {
+                    wardSelect.length = 1;
+                    const p = data.find(x => x.name === provinceSelect.value);
+                    const d = p.districts.find(x => x.name === districtSelect.value);
+                    if (d) d.wards.forEach(w => wardSelect.add(new Option(w.name, w.name)));
+                };
+            });
+
+        // 3. Điều hướng
+        function handleNext() {
+            if (currentStep === 1) {
+                const name = document.getElementById('customerName').value;
+                const phone = document.getElementById('customerPhone').value;
+                if (!name || !phone || !provinceSelect.value) {
+                    alert("Vui lòng điền đầy đủ thông tin!"); return;
+                }
+                orderData.customer = {
+                    name, phone,
+                    address: `${document.getElementById('detailAddress').value}, ${wardSelect.value}, ${districtSelect.value}, ${provinceSelect.value}`
+                };
+            }
+
+            if (currentStep < 3) {
+                toggleStep(currentStep, false);
+                currentStep++;
+                toggleStep(currentStep, true);
+
+                if (currentStep === 3) {
+                    renderFinalOrder();
+                    const nextBtn = document.getElementById('mainNextBtn');
+                    document.querySelector('.btn-prev').style.display = 'none';
+                    document.querySelector('.order-footer-btns').classList.add('finish-state');
+                    nextBtn.innerHTML = '<i class="fas fa-home"></i> HOÀN TẤT & VỀ TRANG CHỦ';
+                    nextBtn.className = 'btn-order btn-finish';
+
+    // Thay thế đoạn này trong file đặt hàng của bạnbạnbạn///
+                    nextBtn.onclick = function() {
+                        // Lưu đơn hàng vào localStorage trước khi về trang chủ
+                        const orders = JSON.parse(localStorage.getItem('nextech_orders') || '[]');
+                        const newOrder = {
+                            id: "ORD" + Date.now(),
+                            productName: foundProduct ? foundProduct.name : 'Sản phẩm NexTech',
+                            productImg: displayImg.src,
+                            price: foundProduct ? foundProduct.price : 'Liên hệ',
+                            customerName: orderData.customer.name,
+                            status: 'processing', // Trạng thái mặc định: Đang xử lý
+                            orderDate: new Date().toLocaleString('vi-VN')
+                        };
+                        orders.push(newOrder);
+                        localStorage.setItem('nextech_orders', JSON.stringify(orders));
+                        
+                        window.location.href = "HOMEHOME.html"; 
+                    };
+                }
+            }
+        }
+
+        function handlePrev() {
+            if (currentStep === 1) { window.history.back(); return; }
+            toggleStep(currentStep, false);
+            currentStep--;
+            toggleStep(currentStep, true);
+        }
+
+        function toggleStep(step, isActive) {
+            const method = isActive ? 'add' : 'remove';
+            document.getElementById(`step-${step}`).classList[method]('active');
+            document.getElementById(`st-${step}`).classList[method]('active');
+        }
+
+        function renderFinalOrder() {
+            const now = new Date();
+            const summaryBox = document.getElementById('order-summary-card');
+            summaryBox.style.border = "none";
+            summaryBox.style.boxShadow = "0 5px 20px rgba(0,0,0,0.05)";
+            summaryBox.innerHTML = `
+                <div class="summary-item" style="padding: 10px;">
+                    <img src="${displayImg.src}" width="100" style="border-radius:12px; border: 1px solid #eee">
+                    <div class="summary-info" style="margin-left: 20px;">
+                        <h4 style="margin:0; color:#333;">${foundProduct ? foundProduct.name : 'Sản phẩm'}</h4>
+                        <p class="price-red">${foundProduct ? foundProduct.price : 'Liên hệ'} VNĐ</p>
+                        <p style="font-size:12px;"><i class="far fa-calendar-alt"></i> ${now.toLocaleString('vi-VN')}</p>
+                        <hr style="border:0; border-top:1px dashed #ddd; margin:10px 0;">
+                        <p><b>${orderData.customer.name}</b></p>
+                        <p style="font-size:11px; color:#666;">${orderData.customer.address}</p>
+                    </div>
+                </div>`;
+        }
+    </script>
+</body>
+</html>

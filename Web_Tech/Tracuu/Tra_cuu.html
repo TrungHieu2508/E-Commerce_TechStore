@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra cứu đơn hàng - NexTech</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="/imgs/LOGO1.png" type="image/x-icon">
+    <style>
+        /* 1. LAYOUT CHUNG (Giữ nguyên từ form cũ) */
+        .order-flow-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+            display: flex; /* Chia cột cho sidebar và nội dung */
+            gap: 20px;
+            min-height: 500px;
+        }
+
+        /* 2. SIDEBAR TÀI KHOẢN (Thiết kế mới) */
+        .account-sidebar {
+            width: 280px;
+            border-right: 1px solid #eee;
+            padding-right: 20px;
+        }
+        .user-info-brief {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        .user-info-brief i { font-size: 40px; color: #333; }
+        .user-info-brief strong { font-size: 16px; color: #333; }
+
+        .side-menu { list-style: none; padding: 0; }
+        .side-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            text-decoration: none;
+            color: #555;
+            font-size: 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .side-menu li a:hover, .side-menu li a.active {
+            background: #fdf2f2;
+            color: #ff0000;
+        }
+        .side-menu li a.active { font-weight: bold; }
+
+        /* 3. NỘI DUNG CHÍNH (Tra cứu đơn hàng) */
+        .lookup-main-content { flex: 1; }
+        
+        /* Stepper Header làm Tab Trạng Thái */
+        .stepper-header {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            padding: 10px 0;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+        }
+        .step-item { 
+            color: #666; 
+            font-size: 13px; 
+            font-weight: bold; 
+            cursor: pointer;
+            padding-bottom: 10px;
+            position: relative;
+            text-transform: uppercase;
+        }
+        .step-item.active { color: #ff0000; }
+        .step-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #ff0000;
+        }
+
+        /* 4. DANH SÁCH ĐƠN HÀNG (Giống ảnh mẫu) */
+        .order-card-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .order-card-item img { width: 150px; object-fit: contain; }
+        .order-card-info { flex: 1; }
+        .order-card-info h4 { margin: 0 0 10px; font-size: 16px; color: #333; }
+        .order-card-info p { margin: 5px 0; font-size: 14px; color: #666; }
+        .order-price { color: #ff0000; font-weight: bold; font-size: 16px; }
+
+        .empty-notify { text-align: center; padding: 50px; color: #999; }
+
+        /* RE-USE OLD STYLES FOR CONSISTENCY */
+        @media (max-width: 850px) {
+            .order-flow-container { flex-direction: column; }
+            .account-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #eee; }
+            .stepper-header { overflow-x: auto; white-space: nowrap; gap: 20px; justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+        <div class="top-banner">
+            <img src="/imgs/1.png" 
+                alt="Chương trình khuyến mãi Mua Laptop Tặng Màn Hình OLED 240Hz" 
+                class="top-banner-img"
+                loading="lazy">
+        </div>
+    <header class="main-header">
+        <div class="container header-content">
+
+            <div class="logo">
+                <a href="/">
+                    <img src="/imgs/LOGO.png" alt="NexTech - Trang chủ" class="logo-img">
+                </a>
+            </div>
+
+            <div class="category-btn">
+                <i class="fas fa-bars"></i> Danh mục
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?">
+                <button type="submit" id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="header-tools">
+                <a href="tel:19001234" class="tool-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div class="text">
+                        <span>Hotline</span>
+                        <strong>1900.1234</strong>
+                    </div>
+                </a>
+
+                <a href="/he-thong-cua-hang" class="tool-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="text">
+                        <span>Hệ thống</span>
+                        <strong>cửa hàng</strong>
+                    </div>
+                </a>
+
+                <a href="/tra-cuu-don-hang" class="tool-item">
+                    <i class="fas fa-box"></i>
+                    <div class="text">
+                        <span>Tra cứu</span>
+                        <strong>đơn hàng</strong>
+                    </div>
+                </a>
+
+                <a href="/login" class="login-btn">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Đăng nhập</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sub-nav">
+        <div class="container sub-nav-flex">
+            <a href="#" class="nav-link"><i class="fa-solid fa-tags"></i> Mua PC tặng màn 240Hz</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-fire-flame-curved"></i> Hot Deal | Laptop</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-newspaper"></i> Tin tức</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-screwdriver-wrench"></i> Dịch vụ kỹ thuật</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-rotate"></i> Thu cũ đổi mới</a>
+            <span class="sep"></span>
+            <a href="#" class="nav-link"><i class="fa-solid fa-shield-check"></i> Tra cứu bảo hành</a>
+        </div>
+    </nav>
+
+    <main class="ct-wrapper">
+        <div class="container">
+            <nav class="bc-top">
+                <a href="/"><i class="fas fa-home"></i> Trang chủ</a> 
+                <span class="sep">></span> 
+                <strong>Tra cứu đơn hàng</strong>
+            </nav>
+
+            <div class="m-layout">
+                <aside class="side-bn left-side"><div class="stk-box"><img src="/imgs/Left.png"></div></aside>
+
+                <section class="page-main">
+                    <div class="order-flow-container">
+                        <aside class="account-sidebar">
+                            <div class="user-info-brief">
+                                <i class="fas fa-user-circle"></i>
+                                <strong id="userNameDisplay">Khách hàng</strong>
+                            </div>
+                            <ul class="side-menu">
+                                <li><a href="#"><i class="fas fa-user"></i> Thông tin tài khoản</a></li>
+                                <li><a href="#" class="active"><i class="fas fa-shopping-bag"></i> Quản lý đơn hàng</a></li>
+                                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                            </ul>
+                        </aside>
+
+                        <div class="lookup-main-content">
+                            <h3 style="margin-top: 0; margin-bottom: 20px;">Quản lý đơn hàng</h3>
+                            
+                            <div class="stepper-header">
+                                <div class="step-item active" onclick="filterOrders('all', this)">Tất cả</div>
+                                <div class="step-item" onclick="filterOrders('processing', this)">Đang xử lý</div>
+                                <div class="step-item" onclick="filterOrders('shipping', this)">Đang vận chuyển</div>
+                                <div class="step-item" onclick="filterOrders('completed', this)">Hoàn thành</div>
+                                <div class="step-item" onclick="filterOrders('cancelled', this)">Hủy</div>
+                            </div>
+
+                            <div id="orderListArea">
+                                </div>
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="side-bn right-side"><div class="stk-box"><img src="/imgs/right.png"></div></aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Về Nexa Tech</h3>
+                <ul>
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Tuyển dụng</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                </ul>
+                <div class="social-links">
+                    <div class="social-wrapper">
+                        <p>HÃY KẾT NỐI VỚI CHÚNG TÔI</p>
+                        <div class="icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-tiktok"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fas fa-users"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Chính sách</h3>
+                <ul>
+                    <li><a href="#">Chính sách bảo hành</a></li>
+                    <li><a href="#">Chính sách giao hàng</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Thông tin</h3>
+                <ul>
+                    <li><a href="#">Hệ thống cửa hàng</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                    <li><a href="#">Hướng dẫn thanh toán</a></li>
+                    <li><a href="#">Hướng dẫn trả góp</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Tổng đài hộ trợ</h3>
+                <ul class="contact-list">
+                    <li>Mua hàng: <span class="blue-text">1900.0000</span></li>
+                    <li>Bảo hành: <span class="blue-text">1900.0001</span></li>
+                    <li>Khiếu nại: <span class="blue-text">1900.0002</span></li>
+                    <li>Email: <span class="blue-text">hihi123@ut.edu.vn</span></li>
+                </ul>
+                <div class="partner-logo">
+                    <img src="/imgs/GHN.png" alt="Giao Hàng Nhanh">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DỮ LIỆU ĐIỀU KIỆN: Khi có đơn xác nhận (lấy từ localStorage)
+        function loadOrdersFromStorage() {
+            return JSON.parse(localStorage.getItem('nextech_orders') || '[]');
+        }
+
+        function filterOrders(status, element) {
+            // Cập nhật giao diện tab
+            document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            const orders = loadOrdersFromStorage();
+            const container = document.getElementById('orderListArea');
+            
+            // Lọc dữ liệu
+            const filtered = status === 'all' ? orders : orders.filter(o => o.status === status);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-notify"><i class="fas fa-box-open" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>Chưa có đơn hàng nào.</div>`;
+                return;
+            }
+
+            // Render danh sách chuẩn theo ảnh mẫu
+            container.innerHTML = filtered.map(order => `
+                <div class="order-card-item">
+                    <img src="${order.productImg}" alt="Product">
+                    <div class="order-card-info">
+                        <h4>${order.productName}</h4>
+                        <p>Số lượng: 1</p>
+                        <p>Trạng thái: <span style="color: #28a745;">${getStatusText(order.status)}</span></p>
+                        <p>Ngày đặt: ${order.orderDate}</p>
+                    </div>
+                    <div class="order-price">${order.price} VND</div>
+                </div>
+            `).join('');
+
+            // Cập nhật tên người dùng nếu có
+            if(orders.length > 0) {
+                document.getElementById('userNameDisplay').innerText = orders[0].customerName;
+            }
+        }
+
+        function getStatusText(status) {
+            const map = {
+                'processing': 'Đang xử lý',
+                'shipping': 'Đang vận chuyển',
+                'completed': 'Hoàn thành',
+                'cancelled': 'Đã hủy'
+            };
+            return map[status] || 'Không xác định';
+        }
+
+        // Khởi tạo trang: Mặc định hiện tất cả
+        window.onload = () => {
+            const firstTab = document.querySelector('.step-item');
+            filterOrders('all', firstTab);
+        };
+    </script>
+</body>
+</html>
