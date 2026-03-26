@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Tra cứu bảo hành - NexTech</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Favicon giữ nguyên theo cấu trúc khách hàng -->
+    <link rel="icon" href="../assets/img/LOGO1.png" type="image/x-icon">
+    <style>
+        /* ---------- RESET & TOÀN CỤC (bổ sung gọn) ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #f5f7fc;
+            color: #1e2a3e;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Container dùng chung (giống header) */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* --- Header Promotion (giữ nguyên) --- */
+        .header-promotion {
+            background-color: #0080FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            gap: 20px;
+            height: 50px;
+            color: white;
+            font-weight: bold;
+        }
+        .promo-button {
+            background: linear-gradient(to bottom, #ffdb2c 0%, #ff9500 100%);
+            color: #ffffff;
+            font-weight: 900;
+            padding: 8px 20px;
+            border-radius: 6px;
+            border: 1px solid #e68a00;
+            cursor: pointer;
+        }
+        /* --- Main Header --- */
+        .main-header {
+            background-color: #1a234a;
+            color: white;
+            padding: 30px 0;
+            height: 100px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo-img { max-height: 90px; }
+        .search-bar {
+            display: flex;
+            flex-grow: 0.6;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 20px;
+        }
+        .search-bar input { border: none; padding: 10px 15px; width: 100%; outline: none; }
+        .search-bar button {
+            background: white;
+            border: none;
+            padding: 0 15px;
+            cursor: pointer;
+            color: #0076DF;
+            font-size: 18px;
+        }
+        .header-tools { display: flex; gap: 20px; align-items: center; }
+        .category-btn, .login-btn {
+            background-color: #0076DF;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tool-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: white; }
+        .tool-item i { font-size: 18px; color: #007bff; background: white; border-radius: 50%; padding: 5px; }
+        /* --- Sub Nav --- */
+        .sub-nav {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 12px 0;
+            z-index: 900;
+            position: sticky;
+            top: 100px;
+        }
+        .sub-nav-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .nav-link { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 7px; color: #444; transition: 0.2s; }
+        .nav-link:hover { color: #0076DF; }
+        /* ----- GIAO DIỆN TRA CỨU BẢO HÀNH (THÊM MỚI) ----- */
+        .warranty-main {
+            background: #f5f7fc;
+            padding: 50px 0 60px;
+        }
+        .warranty-card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #1a234a 0%, #0f173b 100%);
+            padding: 28px 32px;
+            color: white;
+        }
+        .card-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-header p {
+            opacity: 0.85;
+            font-size: 15px;
+        }
+        /* Tabs */
+        .tabs-container {
+            padding: 0 28px;
+            border-bottom: 1px solid #eef2f8;
+            background: white;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 28px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 18px 0 14px;
+            cursor: pointer;
+            color: #6c7a8e;
+            transition: 0.2s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tab-btn i { font-size: 1.2rem; }
+        .tab-btn.active {
+            color: #0076DF;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #0076DF;
+            border-radius: 4px 4px 0 0;
+        }
+        /* Nội dung form */
+        .tab-pane {
+            display: none;
+            padding: 32px 28px 28px;
+            background: white;
+        }
+        .tab-pane.active-pane {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 14px;
+            color: #1f2a48;
+        }
+        .label-required::after {
+            content: "*";
+            color: #e03a3a;
+            margin-left: 5px;
+        }
+        .input-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            color: #8a99b0;
+            font-size: 16px;
+        }
+        .input-icon input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 15px;
+            transition: 0.2s;
+            background: #fff;
+        }
+        .input-icon input:focus {
+            border-color: #0076DF;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 118, 223, 0.1);
+        }
+        .error-message {
+            font-size: 12px;
+            color: #e03a3a;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-search {
+            background: #0076DF;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(0, 118, 223, 0.2);
+        }
+        .btn-search:hover {
+            background: #0a5bb5;
+            transform: translateY(-1px);
+        }
+        .result-box {
+            margin-top: 30px;
+            background: #f8fafd;
+            border-radius: 24px;
+            padding: 20px 24px;
+            border-left: 5px solid #0076DF;
+            transition: 0.2s;
+        }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result-content {
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        .note-text {
+            background: #fef6e0;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 13px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #a96c0e;
+        }
+        /* Footer (giữ nguyên style) */
+        .main-footer {
+            background-color: white;
+            padding: 50px 0;
+            border-top: 1px solid #eee;
+            margin-top: 0px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        .footer-col h3 { font-size: 18px; margin-bottom: 20px; color: #000; }
+        .footer-col ul li { margin-bottom: 12px; font-size: 14px; color: #666; list-style: none; }
+        .hover-col li a:hover { color: #0076DF; }
+        .blue-text { color: #007bff; font-weight: bold; }
+        .social-links { margin-top: 60px; border-top: 1px solid #eee; padding-top: 15px; }
+        .social-wrapper { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .icons { display: flex; gap: 12px; }
+        @media (max-width: 992px) {
+            .header-tools, .sep { display: none; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .main-header { height: auto; padding: 15px 0; }
+            .sub-nav { top: 82px; }
+            .tab-btn { font-size: 15px; gap: 6px; }
+        }
+        @media (max-width: 640px) {
+            .card-header h1 { font-size: 22px; }
+            .tab-buttons { gap: 12px; }
+            .tab-btn { font-size: 14px; padding: 14px 0 10px; }
+            .warranty-card { border-radius: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== HEADER PROMOTION ========== -->
+<div class="header-promotion">
+    <button class="promo-button">MUA LAPTOP</button>
+    <span class="promo-text"><span class="promo-brand">NXT</span> | TẶNG MÀN OLED 240Hz</span>
+</div>
+
+<header class="main-header">
+    <div class="container header-content">
+        <div class="logo">
+            <a href="index.html">
+                <img src="../assets/img/LOGO.png" alt="NexTech - Trang chủ" class="logo-img">
+            </a>
+        </div>
+        <div class="category-btn">
+            <i class="fas fa-bars"></i> Danh mục
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?" autocomplete="off">
+            <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="header-tools">
+            <a href="tel:19001234" class="tool-item">
+                <i class="fas fa-phone-alt"></i>
+                <div class="text"><span>Hotline</span><strong>1900.1234</strong></div>
+            </a>
+            <a href="/he-thong-cua-hang" class="tool-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="text"><span>Hệ thống</span><strong>cửa hàng</strong></div>
+            </a>
+            <a href="./Tra_cuu.html" class="tool-item">
+                <i class="fas fa-box"></i>
+                <div class="text"><span>Tra cứu</span><strong>đơn hàng</strong></div>
+            </a>
+            <a href="./login.html" class="login-btn">
+                <i class="fas fa-user-circle"></i><span>Đăng nhập</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<nav class="sub-nav">
+    <div class="container sub-nav-flex">
+        <a href="#" class="nav-link"><i class="fa-solid fa-tags"></i> Mua Laptop tặng màn 240Hz</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-fire-flame-curved"></i> Hot Deal | Laptop</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-newspaper"></i> Tin tức</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-screwdriver-wrench"></i> Dịch vụ kỹ thuật</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link"><i class="fa-solid fa-rotate"></i> Thu cũ đổi mới</a>
+        <span class="sep"></span>
+        <a href="#" class="nav-link active-warranty"><i class="fa-solid fa-shield-check"></i> Tra cứu bảo hành</a>
+    </div>
+</nav>
+
+<!-- ========== NỘI DUNG CHÍNH: TRA CỨU BẢO HÀNH ========== -->
+<section class="warranty-main">
+    <div class="container">
+        <div class="warranty-card">
+            <div class="card-header">
+                <h1><i class="fas fa-shield-alt"></i> Tra cứu bảo hành</h1>
+                <p>Quý khách vui lòng nhập đầy đủ thông tin <strong>bắt buộc</strong> để tra cứu trạng thái bảo hành sản phẩm.</p>
+            </div>
+            <div class="tabs-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="tab1"><i class="fas fa-receipt"></i> Tra cứu phiếu bảo hành</button>
+                    <button class="tab-btn" data-tab="tab2"><i class="fas fa-microchip"></i> Tra cứu IMEI</button>
+                </div>
+            </div>
+
+            <!-- Tab 1: Bảo hành theo số điện thoại + mã phiếu -->
+            <div class="tab-pane active-pane" id="tab1">
+                <form id="warrantyForm">
+                    <div class="form-group">
+                        <label class="label-required">Số điện thoại</label>
+                        <div class="input-icon">
+                            <i class="fas fa-phone-alt"></i>
+                            <input type="tel" id="phoneNumber" placeholder="VD: 0901234567" autocomplete="off">
+                        </div>
+                        <div id="phoneError" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-required">Mã phiếu bảo hành</label>
+                        <div class="input-icon">
+                            <i class="fas fa-qrcode"></i>
+                            <input type="text" id="warrantyCode" placeholder="Nhập mã phiếu (VD: NXT-2409-001)">
+                        </div>
+                        <div id="codeError" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="btn-search"><i class="fas fa-search"></i> Tra cứu ngay</button>
+                </form>
+                <div id="resultArea1" class="result-box" style="display: none;"></div>
+                <div class="note-text">
+                    <i class="fas fa-info-circle"></i> Lưu ý: Cả 2 trường đều bắt buộc. Vui lòng nhập chính xác số điện thoại đăng ký và mã phiếu.
+                </div>
+            </div>
+
+            <!-- Tab 2: Tra cứu IMEI -->
+            <div class="tab-pane" id="tab2">
+                <form id="imeiForm">
+                    <div class="form-group">
+                        <label class="label-required">Số IMEI / Serial</label>
+                        <div class="input-icon">
+                            <i class="fas fa-barcode"></i>
+                            <input type="text" id="imeiValue" placeholder="Nhập IMEI (15 chữ số) hoặc số serial" autocomplete="off">
+                        </div>
+                        <div id="imeiError" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="btn-search"><i class="fas fa-microchip"></i> Tra cứu IMEI</button>
+                </form>
+                <div id="resultArea2" class="result-box" style="display: none;"></div>
+                <div class="note-text">
+                    <i class="fas fa-mobile-alt"></i> IMEI thường có 15 số, có thể tìm thấy trên hộp sản phẩm hoặc bằng cách bấm *#06# trên điện thoại.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER (giữ nguyên) ========== -->
+<footer class="main-footer">
+    <div class="container footer-grid">
+        <div class="footer-col">
+            <h3>Về Nexa Tech</h3>
+            <ul class="hover-col">
+                <li><a href="#">Giới thiệu</a></li>
+                <li><a href="#">Tuyển dụng</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+            <div class="social-links">
+                <div class="social-wrapper">
+                    <p>HÃY KẾT NỐI VỚI CHÚNG TÔI</p>
+                    <div class="icons">
+                        <a href="#"><i class="fab fa-facebook-f" style="color:blue"></i></a>
+                        <a href="#"><i class="fab fa-tiktok" style="color:black"></i></a>
+                        <a href="#"><i class="fab fa-youtube" style="color:red"></i></a>
+                        <a href="#"><i class="fas fa-users" style="color:green"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h3>Chính sách</h3>
+            <ul class="hover-col">
+                <li><a href="#">Chính sách bảo hành</a></li>
+                <li><a href="#">Chính sách giao hàng</a></li>
+                <li><a href="#">Chính sách bảo mật</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>Thông tin</h3>
+            <ul class="hover-col">
+                <li><a href="#">Hệ thống cửa hàng</a></li>
+                <li><a href="#">Hướng dẫn mua hàng</a></li>
+                <li><a href="#">Hướng dẫn thanh toán</a></li>
+                <li><a href="#">Hướng dẫn trả góp</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>Tổng đài hỗ trợ</h3>
+            <ul class="contact-list">
+                <li>Mua hàng: <span class="blue-text">1900.0000</span></li>
+                <li>Bảo hành: <span class="blue-text">1900.0001</span></li>
+                <li>Khiếu nại: <span class="blue-text">1900.0002</span></li>
+                <li>Email: <span class="blue-text">hihi123@ut.edu.vn</span></li>
+            </ul>
+            <div class="partner-logo">
+                <img src="../assets/img/GHN.png" alt="Giao Hàng Nhanh" style="max-width: 100px; margin-top: 12px;">
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    (function() {
+        // ----- PHẦN TỬ DOM -----
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.tab-pane');
+
+        // Các form + result
+        const warrantyForm = document.getElementById('warrantyForm');
+        const imeiForm = document.getElementById('imeiForm');
+        const resultArea1 = document.getElementById('resultArea1');
+        const resultArea2 = document.getElementById('resultArea2');
+
+        // Inputs tab1
+        const phoneInput = document.getElementById('phoneNumber');
+        const warrantyCodeInput = document.getElementById('warrantyCode');
+        const phoneError = document.getElementById('phoneError');
+        const codeError = document.getElementById('codeError');
+
+        // Input tab2
+        const imeiInput = document.getElementById('imeiValue');
+        const imeiErrorSpan = document.getElementById('imeiError');
+
+        // ---- Hàm xóa lỗi ----
+        function clearErrorsTab1() {
+            phoneError.innerHTML = '';
+            codeError.innerHTML = '';
+            if(phoneInput) phoneInput.style.borderColor = '';
+            if(warrantyCodeInput) warrantyCodeInput.style.borderColor = '';
+        }
+
+        function clearImeiError() {
+            imeiErrorSpan.innerHTML = '';
+            if(imeiInput) imeiInput.style.borderColor = '';
+        }
+
+        // ---- Reset result khi chuyển tab (tốt UX) ----
+        function resetResults() {
+            if(resultArea1) resultArea1.style.display = 'none';
+            if(resultArea2) resultArea2.style.display = 'none';
+        }
+
+        // ---- Hiển thị kết quả mẫu (demo dữ liệu bảo hành) ----
+        function showWarrantyResult(phone, warrantyCode) {
+            // mô phỏng dữ liệu trả về từ server (demo)
+            const mockData = {
+                productName: "Laptop ASUS TUF Gaming F15",
+                warrantyEnd: "31/12/2026",
+                status: "Còn hiệu lực",
+                remainingDays: "412 ngày",
+                supportHotline: "1900.0001"
+            };
+            resultArea1.innerHTML = `
+                <div class="result-title">
+                    <i class="fas fa-check-circle" style="color:#2ecc71;"></i> 
+                    <span>Thông tin bảo hành</span>
+                </div>
+                <div class="result-content">
+                    <p><strong>📱 Số điện thoại:</strong> ${phone}</p>
+                    <p><strong>🎫 Mã phiếu:</strong> ${warrantyCode}</p>
+                    <p><strong>🖥️ Sản phẩm:</strong> ${mockData.productName}</p>
+                    <p><strong>⏳ Hạn bảo hành:</strong> ${mockData.warrantyEnd} (còn ${mockData.remainingDays})</p>
+                    <p><strong>🔧 Trạng thái:</strong> <span style="color:#27ae60; font-weight:bold;">${mockData.status}</span></p>
+                    <p><strong>📞 Hỗ trợ:</strong> ${mockData.supportHotline}</p>
+                </div>
+            `;
+            resultArea1.style.display = 'block';
+        }
+
+        function showImeiResult(imei) {
+            const mockImeiData = {
+                device: "iPhone 15 Pro Max 256GB",
+                warrantyExp: "15/05/2027",
+                warrantyStatus: "Bảo hành chính hãng",
+                note: "Kích hoạt ngày 20/03/2025"
+            };
+            resultArea2.innerHTML = `
+                <div class="result-title">
+                    <i class="fas fa-mobile-alt" style="color:#0076DF;"></i>
+                    <span>Kết quả tra IMEI</span>
+                </div>
+                <div class="result-content">
+                    <p><strong>🔢 IMEI:</strong> ${imei}</p>
+                    <p><strong>📱 Thiết bị:</strong> ${mockImeiData.device}</p>
+                    <p><strong>📅 Bảo hành đến:</strong> ${mockImeiData.warrantyExp}</p>
+                    <p><strong>✅ Tình trạng:</strong> ${mockImeiData.warrantyStatus}</p>
+                    <p><strong>📌 Ghi chú:</strong> ${mockImeiData.note}</p>
+                </div>
+            `;
+            resultArea2.style.display = 'block';
+        }
+
+        // ---- VALIDATION TAB 1 (cả 2 trường không được bỏ trống) ----
+        function validateWarrantyForm() {
+            let isValid = true;
+            const phoneVal = phoneInput.value.trim();
+            const codeVal = warrantyCodeInput.value.trim();
+
+            // Reset lỗi
+            clearErrorsTab1();
+
+            if (phoneVal === "") {
+                phoneError.innerHTML = '<i class="fas fa-exclamation-circle"></i> Số điện thoại không được để trống';
+                phoneInput.style.borderColor = "#e03a3a";
+                isValid = false;
+            } else if (!/^(0[3|5|7|8|9])+([0-9]{8})$/g.test(phoneVal) && phoneVal.length < 9) {
+                // cảnh báo nhẹ nhưng vẫn chấp nhận (không chặn cứng, chỉ gợi ý)
+                phoneError.innerHTML = '<i class="fas fa-info-circle"></i> Số điện thoại chưa đúng định dạng, vui lòng kiểm tra lại';
+                // vẫn cho submit nhưng báo lỗi nhẹ? Tốt nhất vẫn bắt buộc format đúng? Theo UX nên nhắc nhưng không block hoàn toàn.
+                // Để đảm bảo chặt chẽ, nếu format sai vẫn không pass? Quyết định: vẫn cho tra cứu nhưng cảnh báo, để thân thiện.
+                // Nhưng yêu cầu chính là không bỏ trống. Để đúng tinh thần, chỉ bắt buộc không rỗng, format không bắt buộc chặn cứng.
+                // Tuy nhiên để chuyên nghiệp: nếu format sai vẫn cho phép tra cứu nhưng show warning. Vẫn pass isValid.
+            }
+
+            if (codeVal === "") {
+                codeError.innerHTML = '<i class="fas fa-exclamation-circle"></i> Mã phiếu bảo hành không được để trống';
+                warrantyCodeInput.style.borderColor = "#e03a3a";
+                isValid = false;
+            }
+
+            if (isValid) {
+                // nếu phone định dạng không hợp lệ vẫn hiển thị nhưng không block, nhưng nếu cả 2 field đã có text thì vẫn cho tra cứu
+                if (phoneVal !== "" && codeVal !== "") return true;
+            }
+            return isValid;
+        }
+
+        // IMEI validation (không bỏ trống)
+        function validateImei() {
+            clearImeiError();
+            const imeiVal = imeiInput.value.trim();
+            if (imeiVal === "") {
+                imeiErrorSpan.innerHTML = '<i class="fas fa-exclamation-circle"></i> Vui lòng nhập IMEI để tra cứu';
+                imeiInput.style.borderColor = "#e03a3a";
+                return false;
+            }
+            if (imeiVal.length < 8) {
+                imeiErrorSpan.innerHTML = '<i class="fas fa-info-circle"></i> IMEI thường có 15 số, vui lòng kiểm tra lại';
+                // không chặn cứng nhưng gợi ý
+            }
+            return true;
+        }
+
+        // Xử lý submit tab 1
+        warrantyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            resetResults();    // ẩn result cũ
+            if (validateWarrantyForm()) {
+                const phone = phoneInput.value.trim();
+                const warrantyCode = warrantyCodeInput.value.trim();
+                // Hiển thị kết quả demo
+                showWarrantyResult(phone, warrantyCode);
+                // Cuộn nhẹ tới kết quả
+                resultArea1.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                // nếu có lỗi, không hiện kết quả
+                if(resultArea1) resultArea1.style.display = 'none';
+            }
+        });
+
+        // Xử lý submit tab 2 (IMEI)
+        imeiForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            resetResults();
+            if (validateImei()) {
+                const imei = imeiInput.value.trim();
+                showImeiResult(imei);
+                resultArea2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                if(resultArea2) resultArea2.style.display = 'none';
+            }
+        });
+
+        // ---- CHUYỂN ĐỔI TABS + reset lỗi, ẩn kết quả ----
+        function switchTab(tabId) {
+            // Ẩn tất cả pane
+            panes.forEach(pane => pane.classList.remove('active-pane'));
+            const activePane = document.getElementById(tabId);
+            if (activePane) activePane.classList.add('active-pane');
+
+            // Cập nhật active style trên nút
+            tabBtns.forEach(btn => {
+                const btnTab = btn.getAttribute('data-tab');
+                if (btnTab === tabId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Reset thông báo lỗi và kết quả
+            clearErrorsTab1();
+            clearImeiError();
+            resetResults();
+
+            // Xóa border đỏ nếu có
+            if(phoneInput) phoneInput.style.borderColor = '';
+            if(warrantyCodeInput) warrantyCodeInput.style.borderColor = '';
+            if(imeiInput) imeiInput.style.borderColor = '';
+        }
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                if (tabId === 'tab1') switchTab('tab1');
+                else if (tabId === 'tab2') switchTab('tab2');
+            });
+        });
+
+        // Optional: Khi người dùng nhập vào ô input, xóa lỗi tương ứng
+        if(phoneInput) {
+            phoneInput.addEventListener('input', () => {
+                phoneError.innerHTML = '';
+                phoneInput.style.borderColor = '';
+            });
+        }
+        if(warrantyCodeInput) {
+            warrantyCodeInput.addEventListener('input', () => {
+                codeError.innerHTML = '';
+                warrantyCodeInput.style.borderColor = '';
+            });
+        }
+        if(imeiInput) {
+            imeiInput.addEventListener('input', () => {
+                imeiErrorSpan.innerHTML = '';
+                imeiInput.style.borderColor = '';
+            });
+        }
+
+        // Đảm bảo lần đầu reset kết quả
+        resetResults();
+    })();
+</script>
+</body>
+</html>

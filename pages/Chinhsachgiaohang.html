@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra cứu bảo hành - NexTech</title>
+    <link rel="stylesheet" href="../assets/CSS/styles.css">
+    <link rel="stylesheet" href="../assets/CSS/product-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="../assets/img/LOGO1.png" type="image/x-icon">
+    <style>
+        /* --- CSS NỀN TẢNG --- */
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 0 15px; }
+
+        /* --- Header & Footer Styles (Giữ nguyên từ code bạn gửi) --- */
+        .header-promotion { background-color: #0080FF; display: flex; align-items: center; justify-content: center; padding: 10px 0; gap: 20px; height: 50px; color: white; font-weight: bold; }
+        .promo-button { background: linear-gradient(to bottom, #ffdb2c 0%, #ff9500 100%); color: #ffffff; font-weight: 900; padding: 8px 20px; border-radius: 6px; border: 1px solid #e68a00; cursor: pointer; }
+        .main-header { background-color: #1a234a; color: white; padding: 30px 0; height: 100px; position: sticky; top: 0; z-index: 1000; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; }
+        .logo-img { max-height: 90px; }
+        .search-bar { display: flex; flex-grow: 0.6; background: white; border-radius: 5px; overflow: hidden; margin: 0 20px; }
+        .search-bar input { border: none; padding: 10px 15px; width: 100%; outline: none; }
+        .header-tools { display: flex; gap: 20px; align-items: center; }
+        .category-btn, .login-btn { background-color: #0076DF; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .tool-item { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+        .tool-item i { font-size: 18px; color: #007bff; }
+        .sub-nav { background: white; border-bottom: 1px solid #ddd; padding: 12px 0; z-index: 900; position: sticky; top: 100px; }
+        .sub-nav-flex { display: flex; justify-content: space-between; align-items: center; }
+        .nav-link { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 7px; color: #444; }
+
+        /* --- PHẦN NỘI DUNG TRA CỨU (LAYOUT THEO MẪU) --- */
+        .warranty-section {
+            background-color: #f0f7ff; /* Nền xanh nhạt dịu mắt */
+            padding: 60px 0;
+            min-height: calc(100vh - 400px);
+            display: flex;
+            align-items: center;
+        }
+
+        .warranty-card {
+            background: #fff;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(26, 35, 74, 0.1);
+        }
+
+        .warranty-card h1 {
+            color: #1a234a;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .warranty-card p.sub-title {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e9f5;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        /* Khi ô nhập liệu bị bỏ trống (Error state) */
+        .form-group input.invalid {
+            border-color: #ff4d4d;
+            background-color: #fff9f9;
+        }
+
+        .error-text {
+            color: #ff4d4d;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none; /* Ẩn mặc định */
+        }
+
+        .form-group input:focus {
+            border-color: #0076DF;
+            box-shadow: 0 0 8px rgba(0, 118, 223, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #0076DF;
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #1a234a;
+            transform: translateY(-2px);
+        }
+
+        .info-note {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .info-note strong { color: #1a234a; }
+
+        /* --- Footer Styles --- */
+        .main-footer { background-color: white; padding: 50px 0; border-top: 1px solid #eee; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+        .footer-col h3 { font-size: 18px; margin-bottom: 20px; color: #000; }
+        .footer-col ul li { margin-bottom: 12px; font-size: 14px; color: #666; list-style: none; }
+        .blue-text { color: #007bff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header-promotion">
+        <button class="promo-button">MUA LAPTOP</button>
+        <span class="promo-text"><span class="promo-brand">NXT</span> | TẶNG MÀN OLED 240Hz</span>
+    </div>
+
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="../assets/img/LOGO.png" alt="NexTech - Trang chủ" class="logo-img">
+                </a>
+            </div>
+            <div class="category-btn"><i class="fas fa-bars"></i> Danh mục</div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?">
+                <button type="button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="header-tools">
+                <a href="tel:19001234" class="tool-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div class="text"><span>Hotline</span><strong>1900.1234</strong></div>
+                </a>
+                <a href="./login.html" class="login-btn">
+                    <i class="fas fa-user-circle"></i><span>Đăng nhập</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sub-nav">
+        <div class="container sub-nav-flex">
+            <a href="#" class="nav-link"><i class="fa-solid fa-tags"></i> Khuyến mãi</a>
+            <a href="#" class="nav-link"><i class="fa-solid fa-newspaper"></i> Tin tức</a>
+            <a href="#" class="nav-link" style="color: #0076DF; font-weight: bold;"><i class="fa-solid fa-shield-check"></i> Tra cứu bảo hành</a>
+        </div>
+    </nav>
+
+    <section class="warranty-section">
+        <div class="container">
+            <div class="warranty-card">
+                <h1>Tra cứu bảo hành</h1>
+                <p class="sub-title">Vui lòng nhập đầy đủ thông tin bên dưới để kiểm tra sản phẩm</p>
+
+                <form id="warrantyForm">
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại mua hàng</label>
+                        <input type="tel" id="phone" placeholder="Nhập số điện thoại đã mua hàng...">
+                        <span class="error-text" id="phoneError">Vui lòng không để trống số điện thoại.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serial">Số Serial (S/N) hoặc IMEI</label>
+                        <input type="text" id="serial" placeholder="Nhập mã Serial hoặc IMEI sản phẩm...">
+                        <span class="error-text" id="serialError">Vui lòng không để trống mã sản phẩm.</span>
+                    </div>
+
+                    <button type="submit" class="btn-submit">TIẾP TỤC TRA CỨU</button>
+                </form>
+
+                <div class="info-note">
+                    <strong>* Hướng dẫn tìm Serial/IMEI:</strong><br>
+                    - Số Serial thường được in trên tem ở mặt đáy Laptop hoặc vỏ hộp.<br>
+                    - Với điện thoại, soạn <strong>*#06#</strong> để lấy mã IMEI nhanh nhất.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Về Nexa Tech</h3>
+                <ul class="hover-col">
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Chính sách</h3>
+                <ul class="hover-col">
+                    <li><a href="#">Chính sách bảo hành</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Thông tin</h3>
+                <ul class="hover-col">
+                    <li><a href="#">Hệ thống cửa hàng</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Tổng đài hỗ trợ</h3>
+                <ul class="contact-list">
+                    <li>Bảo hành: <span class="blue-text">1900.0001</span></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('warrantyForm').addEventListener('submit', function(e) {
+            // Ngăn form load lại trang khi bấm submit
+            e.preventDefault();
+
+            const phone = document.getElementById('phone');
+            const serial = document.getElementById('serial');
+            const phoneError = document.getElementById('phoneError');
+            const serialError = document.getElementById('serialError');
+
+            let isValid = true;
+
+            // Kiểm tra số điện thoại
+            if (phone.value.trim() === "") {
+                phone.classList.add('invalid');
+                phoneError.style.display = 'block';
+                isValid = false;
+            } else {
+                phone.classList.remove('invalid');
+                phoneError.style.display = 'none';
+            }
+
+            // Kiểm tra Serial
+            if (serial.value.trim() === "") {
+                serial.classList.add('invalid');
+                serialError.style.display = 'block';
+                isValid = false;
+            } else {
+                serial.classList.remove('invalid');
+                serialError.style.display = 'none';
+            }
+
+            // Nếu dữ liệu hợp lệ
+            if (isValid) {
+                alert('Hệ thống đang kiểm tra thông tin bảo hành cho sản phẩm: ' + serial.value);
+                // Tại đây bạn có thể thêm code gửi dữ liệu lên Server
+            }
+        });
+
+        // Xóa thông báo lỗi ngay khi người dùng bắt đầu gõ lại
+        document.querySelectorAll('.form-group input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('invalid');
+                const errorSpan = this.nextElementSibling;
+                if (errorSpan) errorSpan.style.display = 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>
