@@ -1,0 +1,118 @@
+/* Tổng hợp từ styles.css */
+.header-promotion {
+    background-color: #0080FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    gap: 20px;
+    height: 50px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.promo-button {
+    background: linear-gradient(to bottom, #ffdb2c 0%, #ff9500 100%);
+    color: #ffffff;
+    font-weight: 900;
+    font-style: italic;
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: 1px solid #e68a00;
+    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2);
+    font-size: 13px;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.promo-brand {
+    color: #ccff00;
+    font-style: italic;
+    font-weight: 900;
+}
+
+.main-header {
+    background-color: #1a234a;
+    color: white;
+    padding: 30px 0;
+    height: 100px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-img {
+    max-height: 90px;
+    width: auto;
+}
+
+.search-bar {
+    display: flex;
+    flex-grow: 0.6;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0 20px;
+}
+
+.search-bar input {
+    border: none;
+    padding: 10px 15px;
+    width: 100%;
+    outline: none;
+}
+
+.header-tools {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.category-btn, .login-btn {
+    background-color: #0076DF;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+}
+
+.sub-nav {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 12px 0;
+    position: sticky;
+    top: 100px;
+    z-index: 900;
+}
+
+.sub-nav-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-link {
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #444;
+}
