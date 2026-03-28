@@ -177,15 +177,15 @@
 
         <h2>Đăng nhập</h2>
 
-        <form>
+        <form id="loginForm">
             <div class="form-group">
                 <label>Email</label>
-                <input type="text" placeholder="User Name">
+                <input id="emailInput" type="text" placeholder="User Name" required>
             </div>
 
             <div class="form-group">
                 <label>Mật khẩu</label>
-                <input type="password" placeholder="Password">
+                <input id="passwordInput" type="password" placeholder="Password" required>
                 <a href="#" class="forgot-password">Quên mật khẩu?</a>
             </div>
 
@@ -209,4 +209,42 @@
     </div>
 
 </body>
+<script>
+    (function () {
+        var ADMIN_TEST_ACCOUNT = {
+            email: "admin@nextech.vn",
+            password: "Admin@123"
+        };
+
+        var form = document.getElementById("loginForm");
+        var emailInput = document.getElementById("emailInput");
+        var passwordInput = document.getElementById("passwordInput");
+
+        if (!form || !emailInput || !passwordInput) {
+            return;
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            var email = emailInput.value.trim().toLowerCase();
+            var password = passwordInput.value;
+
+            if (email === ADMIN_TEST_ACCOUNT.email && password === ADMIN_TEST_ACCOUNT.password) {
+                localStorage.setItem(
+                    "nextech_auth",
+                    JSON.stringify({
+                        role: "admin",
+                        email: ADMIN_TEST_ACCOUNT.email,
+                        loggedInAt: new Date().toISOString()
+                    })
+                );
+                window.location.href = "./admin/dashboard.html";
+                return;
+            }
+
+            alert("Sai tài khoản hoặc mật khẩu admin test. Vui lòng thử lại.");
+        });
+    })();
+</script>
 </html>
