@@ -10,11 +10,11 @@
     ];
 
     var users = [
-        { id: "U-001", name: "Nguyen Hoang Minh", email: "minh.nguyen@gmail.com", phone: "0901122334", role: "customer", status: "active", orders: 12, totalSpent: 182500000, joinedAt: "2025-07-10" },
-        { id: "U-002", name: "Tran Khanh Linh", email: "linh.tran@gmail.com", phone: "0912233445", role: "customer", status: "active", orders: 5, totalSpent: 43600000, joinedAt: "2025-11-03" },
-        { id: "U-003", name: "Le Quang Huy", email: "huy.le@gmail.com", phone: "0963344556", role: "customer", status: "locked", orders: 1, totalSpent: 1590000, joinedAt: "2026-02-19" },
-        { id: "U-004", name: "Pham Thu Ha", email: "ha.pham@nextech.vn", phone: "0988123456", role: "staff", status: "active", orders: 0, totalSpent: 0, joinedAt: "2024-03-04" },
-        { id: "U-005", name: "Vu Duc Long", email: "long.vu@nextech.vn", phone: "0978456123", role: "admin", status: "active", orders: 0, totalSpent: 0, joinedAt: "2023-10-12" }
+        { id: "U-001", name: "Nguyen Hoang Minh", email: "minh.nguyen@gmail.com", phone: "0901122334", role: "customer", status: "active", orders: 12, totalSpent: 182500000, joinedAt: "2025-07-10", registerChannel: "Website", emailVerified: true, registeredBy: "Self-service" },
+        { id: "U-002", name: "Tran Khanh Linh", email: "linh.tran@gmail.com", phone: "0912233445", role: "customer", status: "active", orders: 5, totalSpent: 43600000, joinedAt: "2025-11-03", registerChannel: "Google", emailVerified: true, registeredBy: "Self-service" },
+        { id: "U-003", name: "Le Quang Huy", email: "huy.le@gmail.com", phone: "0963344556", role: "customer", status: "locked", orders: 1, totalSpent: 1590000, joinedAt: "2026-02-19", registerChannel: "Facebook", emailVerified: false, registeredBy: "Self-service" },
+        { id: "U-004", name: "Pham Thu Ha", email: "ha.pham@nextech.vn", phone: "0988123456", role: "staff", status: "active", orders: 0, totalSpent: 0, joinedAt: "2024-03-04", registerChannel: "Internal", emailVerified: true, registeredBy: "Admin Invite" },
+        { id: "U-005", name: "Vu Duc Long", email: "long.vu@nextech.vn", phone: "0978456123", role: "admin", status: "active", orders: 0, totalSpent: 0, joinedAt: "2023-10-12", registerChannel: "Internal", emailVerified: true, registeredBy: "System Seed" }
     ];
 
     var promotions = [

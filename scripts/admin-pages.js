@@ -328,7 +328,7 @@
     }
 
     function renderUsersPage() {
-        AdminCore.renderShell("users", "Quản lý người dùng", "Theo dõi tài khoản, trạng thái và lịch sử mua hàng của khách");
+        AdminCore.renderShell("users", "Quản lý người dùng", "Xem thông tin đăng ký, khóa hoặc xóa tài khoản người dùng");
 
         AdminCore.setContent(
             '<div class="admin-card"><div class="admin-card-body">' +
@@ -368,6 +368,7 @@
                         },
                         { label: "Điện thoại", key: "phone" },
                         { label: "Role", render: function (u) { return '<span class="badge info">' + u.role + "</span>"; } },
+                        { label: "Ngày đăng ký", key: "joinedAt" },
                         { label: "Trạng thái", render: function (u) { return AdminCore.statusBadge("user", u.status); } },
                         { label: "Số đơn", key: "orders" },
                         { label: "Tổng chi", render: function (u) { return AdminCore.formatCurrency(u.totalSpent); } },
@@ -379,6 +380,7 @@
                                     '<div class="table-actions">' +
                                     '<button class="btn btn-ghost" data-user-action="view" data-id="' + u.id + '"><i class="fas fa-eye"></i></button>' +
                                     '<label class="switch"><input type="checkbox" data-user-action="switch" data-id="' + u.id + '" ' + checked + ' /><span></span></label>' +
+                                    '<button class="btn btn-danger" data-user-action="delete" data-id="' + u.id + '"><i class="fas fa-trash"></i></button>' +
                                     "</div>"
                                 );
                             }
@@ -400,11 +402,18 @@
                         bodyHtml:
                             '<div style="display:grid;gap:8px">' +
                                 '<div><strong>' + user.name + '</strong></div>' +
+                                '<div style="height:1px;background:#e5e7eb;margin:2px 0 6px"></div>' +
+                                '<div><strong>Thông tin đăng ký</strong></div>' +
                                 '<div>Email: ' + user.email + '</div>' +
                                 '<div>SĐT: ' + user.phone + '</div>' +
+                                '<div>Kênh đăng ký: ' + (user.registerChannel || "Website") + '</div>' +
+                                '<div>Email xác thực: ' + (user.emailVerified ? '<span class="badge success">Đã xác thực</span>' : '<span class="badge warning">Chưa xác thực</span>') + '</div>' +
+                                '<div>Đăng ký bởi: ' + (user.registeredBy || "Self-service") + '</div>' +
                                 '<div>Role: <span class="badge info">' + user.role + '</span></div>' +
                                 '<div>Trạng thái: ' + AdminCore.statusBadge("user", user.status) + '</div>' +
-                                '<div>Ngày tham gia: ' + user.joinedAt + '</div>' +
+                                '<div>Ngày đăng ký: ' + user.joinedAt + '</div>' +
+                                '<div style="height:1px;background:#e5e7eb;margin:2px 0 6px"></div>' +
+                                '<div><strong>Lịch sử mua hàng</strong></div>' +
                                 '<div>Số đơn hàng: ' + user.orders + '</div>' +
                                 '<div>Tổng chi tiêu: ' + AdminCore.formatCurrency(user.totalSpent) + '</div>' +
                             "</div>",
@@ -421,9 +430,52 @@
                     if (!user) {
                         return;
                     }
-                    user.status = cb.checked ? "active" : "locked";
-                    AdminCore.toast("Đã cập nhật trạng thái tài khoản", "success");
-                    renderTable();
+                    var nextStatus = cb.checked ? "active" : "locked";
+                    var statusText = nextStatus === "locked" ? "khóa" : "mở khóa";
+
+                    AdminCore.openModal({
+                        title: "Xác nhận cập nhật trạng thái",
+                        bodyHtml: '<p>Bạn có chắc muốn <strong>' + statusText + '</strong> tài khoản <strong>' + user.name + '</strong>?</p>',
+                        actions: [
+                            { key: "cancel", label: "Hủy", className: "btn-ghost" },
+                            { key: "ok", label: "Xác nhận", className: "btn-primary" }
+                        ],
+                        onAction: function (key, close) {
+                            if (key === "ok") {
+                                user.status = nextStatus;
+                                AdminCore.toast("Đã cập nhật trạng thái tài khoản", "success");
+                            }
+                            close();
+                            renderTable();
+                        }
+                    });
+                });
+            });
+
+            document.querySelectorAll("[data-user-action='delete']").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    var id = btn.getAttribute("data-id");
+                    var user = state.users.find(function (u) { return u.id === id; });
+                    if (!user) {
+                        return;
+                    }
+
+                    AdminCore.openModal({
+                        title: "Xác nhận xóa tài khoản",
+                        bodyHtml: '<p>Bạn có chắc muốn xóa tài khoản <strong>' + user.name + '</strong> (' + user.id + ')?</p><p style="color:#b42318;font-size:12px">Thao tác này hiện chỉ mô phỏng ở giao diện Admin.</p>',
+                        actions: [
+                            { key: "cancel", label: "Hủy", className: "btn-ghost" },
+                            { key: "ok", label: "Xóa tài khoản", className: "btn-danger" }
+                        ],
+                        onAction: function (key, close) {
+                            if (key === "ok") {
+                                state.users = state.users.filter(function (u) { return u.id !== id; });
+                                AdminCore.toast("Đã xóa tài khoản người dùng", "success");
+                                renderTable();
+                            }
+                            close();
+                        }
+                    });
                 });
             });
         }
