@@ -1,28 +1,49 @@
 (function () {
     var state = {
-        products: (window.AdminData && window.AdminData.products ? window.AdminData.products.slice() : []),
-        users: (window.AdminData && window.AdminData.users ? window.AdminData.users.slice() : []),
-        promotions: (window.AdminData && window.AdminData.promotions ? window.AdminData.promotions.slice() : []),
-        orders: (window.AdminData && window.AdminData.orders ? window.AdminData.orders.slice() : []),
-        dashboard: (window.AdminData && window.AdminData.dashboard) || null
+        products: [],
+        users: [],
+        promotions: [],
+        orders: [],
+        support: [],
+        banners: [],
+        dashboard: null
     };
 
     function byId(id) {
         return document.getElementById(id);
     }
 
-    function init() {
+    async function init() {
         var page = document.body.getAttribute("data-page") || "dashboard";
-        if (page === "dashboard") {
-            renderDashboard();
-        } else if (page === "products") {
-            renderProductsPage();
-        } else if (page === "users") {
-            renderUsersPage();
-        } else if (page === "content") {
-            renderContentPage();
-        } else if (page === "orders") {
-            renderOrdersPage();
+        
+        try {
+            if (page === "dashboard") {
+                state.dashboard = await AdminCore.api("/admin/dashboard/stats");
+                state.products = await AdminCore.api("/products");
+                state.orders = await AdminCore.api("/admin/orders");
+                renderDashboard();
+            } else if (page === "products") {
+                state.products = await AdminCore.api("/products");
+                renderProductsPage();
+            } else if (page === "users") {
+                state.users = await AdminCore.api("/admin/users");
+                renderUsersPage();
+            } else if (page === "content") {
+                state.promotions = await AdminCore.api("/admin/content");
+                renderContentPage();
+            } else if (page === "orders") {
+                state.orders = await AdminCore.api("/admin/orders");
+                renderOrdersPage();
+            } else if (page === "support") {
+                state.support = await AdminCore.api("/admin/support");
+                renderSupportPage();
+            } else if (page === "banners") {
+                state.banners = await AdminCore.api("/admin/banners");
+                renderBannersPage();
+            }
+        } catch (err) {
+            console.error("Fetch Error:", err);
+            AdminCore.toast("Không thể tải dữ liệu từ máy chủ", "error");
         }
     }
 
@@ -79,8 +100,21 @@
             '<section class="admin-grid-4">' + kpiHtml + "</section>" +
 
             '<section class="admin-grid-2">' +
-                '<article class="admin-card"><div class="admin-card-header"><h3 class="admin-card-title">Doanh thu theo ngày</h3></div><div class="admin-card-body"><div class="chart-box"><div id="revenueChart" class="simple-chart"></div></div></div></article>' +
-                '<article class="admin-card"><div class="admin-card-header"><h3 class="admin-card-title">Đơn hàng theo ngày</h3></div><div class="admin-card-body"><div class="chart-box"><div id="ordersChart" class="simple-chart"></div></div></div></article>' +
+                '<article class="admin-card"><div class="admin-card-header"><h3 class="admin-card-title">Phân bổ doanh thu theo trạng thái</h3></div><div class="admin-card-body"><div class="chart-box"><div id="revenueChart" class="simple-chart"></div></div></div></article>' +
+                '<article class="admin-card"><div class="admin-card-header"><h3 class="admin-card-title">Doanh thu theo ngành hàng (Triệu VNĐ)</h3></div>' +
+                '<div class="admin-card-body">' + 
+                    '<div id="categoryRevenueBar" style="display:flex;align-items:flex-end;height:140px;gap:12px;padding-bottom:20px;margin-top:20px">' +
+                        (state.dashboard.categoryLabels || []).map(function(label, i) {
+                            var val = state.dashboard.categoryValues[i];
+                            var max = Math.max.apply(null, state.dashboard.categoryValues) || 1;
+                            var h = (val / max) * 100;
+                            return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px">' +
+                                   '<div style="background:#0076df;width:40%;height:' + h + '%;border-radius:4px 4px 0 0" title="' + AdminCore.formatCurrency(val) + '"></div>' +
+                                   '<span style="font-size:10px;color:#667085;text-align:center;word-break:break-word;max-width:50px">' + label + '</span>' +
+                                   '</div>';
+                        }).join('') +
+                    '</div>' +
+                '</div></article>' +
             "</section>" +
 
             '<section class="admin-grid-3">' +
@@ -91,7 +125,6 @@
         );
 
         AdminCore.drawLineChart("revenueChart", state.dashboard.labels, state.dashboard.revenueSeries, "#0076df");
-        AdminCore.drawLineChart("ordersChart", state.dashboard.labels, state.dashboard.ordersSeries, "#d70018");
 
         byId("dashboardRefresh").addEventListener("click", function () {
             AdminCore.toast("Dữ liệu thống kê đã cập nhật", "success");
@@ -173,9 +206,10 @@
                         render: function (row) {
                             return (
                                 '<div class="table-actions">' +
-                                '<button class="btn btn-ghost" data-product-action="view" data-id="' + row.id + '"><i class="fas fa-eye"></i></button>' +
-                                '<button class="btn btn-ghost" data-product-action="edit" data-id="' + row.id + '"><i class="fas fa-pen"></i></button>' +
-                                '<button class="btn btn-danger" data-product-action="delete" data-id="' + row.id + '"><i class="fas fa-trash"></i></button>' +
+                                '<button class="btn btn-ghost" data-product-action="view" data-id="' + row.id + '" title="Chi tiết"><i class="fas fa-eye"></i></button>' +
+                                '<button class="btn btn-ghost" data-product-action="import" data-id="' + row.id + '" title="Nhập kho"><i class="fas fa-plus-square"></i></button>' +
+                                '<button class="btn btn-ghost" data-product-action="edit" data-id="' + row.id + '" title="Sửa"><i class="fas fa-pen"></i></button>' +
+                                '<button class="btn btn-danger" data-product-action="delete" data-id="' + row.id + '" title="Xóa"><i class="fas fa-trash"></i></button>' +
                                 "</div>"
                             );
                         }
@@ -196,6 +230,8 @@
                     }
                     if (action === "view") {
                         openProductDrawer(record);
+                    } else if (action === "import") {
+                        openStockImportModal(record);
                     } else if (action === "edit") {
                         openProductModal(record);
                     } else if (action === "delete") {
@@ -206,11 +242,16 @@
                                 { key: "cancel", label: "Hủy", className: "btn-ghost" },
                                 { key: "ok", label: "Xóa", className: "btn-danger" }
                             ],
-                            onAction: function (key, close) {
+                            onAction: async function (key, close) {
                                 if (key === "ok") {
-                                    state.products = state.products.filter(function (p) { return p.id !== id; });
-                                    renderTable();
-                                    AdminCore.toast("Đã xóa sản phẩm", "success");
+                                    try {
+                                        await AdminCore.api("/admin/products/" + id, { method: "DELETE" });
+                                        state.products = state.products.filter(function (p) { return p.id !== id; });
+                                        renderTable();
+                                        AdminCore.toast("Đã xóa sản phẩm", "success");
+                                    } catch (err) {
+                                        AdminCore.toast(err.msg || "Lỗi khi xóa sản phẩm", "error");
+                                    }
                                 }
                                 close();
                             }
@@ -221,6 +262,21 @@
         }
 
         function openProductDrawer(item) {
+            var specsHtml = "";
+            if (item.details) {
+                try {
+                    var specs = JSON.parse(item.details);
+                    specsHtml = '<div style="margin-top:12px;padding-top:12px;border-top:1px solid #e5e7eb">' +
+                                '<strong>Thông số kỹ thuật:</strong>' +
+                                '<ul style="margin:8px 0 0 18px;font-size:13px;color:#667085">' +
+                                (specs.cpu ? '<li>CPU: ' + specs.cpu + '</li>' : '') +
+                                (specs.ram ? '<li>RAM: ' + specs.ram + '</li>' : '') +
+                                (specs.storage ? '<li>Ổ cứng: ' + specs.storage + '</li>' : '') +
+                                (specs.screen ? '<li>Màn hình: ' + specs.screen + '</li>' : '') +
+                                '</ul></div>';
+                } catch(e) {}
+            }
+
             AdminCore.openDrawer({
                 title: "Chi tiết sản phẩm",
                 bodyHtml:
@@ -233,6 +289,7 @@
                         '<div>Tồn kho: ' + item.stock + "</div>" +
                         '<div>Đã bán: ' + item.sold + "</div>" +
                         '<div>Trạng thái: ' + AdminCore.statusBadge("product", item.status) + "</div>" +
+                        specsHtml +
                     "</div>",
                 actions: [{ key: "close", label: "Đóng", className: "btn-ghost" }],
                 onAction: function (_, close) { close(); }
@@ -249,7 +306,8 @@
                 stock: 0,
                 status: "active",
                 sold: 0,
-                image: "../../assets/img/LOGO1.png"
+                image: "../../assets/img/LOGO1.png",
+                details: ""
             };
 
             AdminCore.openModal({
@@ -263,16 +321,32 @@
                         '<label class="form-field"><span class="form-label">Tồn kho</span><input type="number" class="input" id="pStock" value="' + data.stock + '" /></label>' +
                         '<label class="form-field"><span class="form-label">Trạng thái</span><select class="select" id="pStatus"><option value="active">Đang bán</option><option value="low_stock">Sắp hết</option><option value="hidden">Đã ẩn</option></select></label>' +
                     "</div>" +
+                    '<div style="margin-top:16px;padding-top:12px;border-top:1px solid #e5e7eb">' +
+                        '<strong>Thông số kỹ thuật (Cấu hình)</strong>' +
+                        '<div class="form-grid-2" style="margin-top:10px">' +
+                            '<label class="form-field"><span class="form-label">Vi xử lý (CPU)</span><input class="input" id="specCPU" placeholder="VD: Apple M3, Intel i9..." /></label>' +
+                            '<label class="form-field"><span class="form-label">RAM</span><input class="input" id="specRAM" placeholder="VD: 16GB, 32GB..." /></label>' +
+                            '<label class="form-field"><span class="form-label">Bộ nhớ (SSD/HDD)</span><input class="input" id="specStorage" placeholder="VD: 512GB SSD..." /></label>' +
+                            '<label class="form-field"><span class="form-label">Màn hình</span><input class="input" id="specScreen" placeholder="VD: 14 inch, Retina..." /></label>' +
+                        '</div>' +
+                    '</div>' +
                     '<div class="form-field" style="margin-top:10px"><span class="form-label">Upload ảnh</span><label class="upload-box" for="pImage">Chọn ảnh thumbnail<input id="pImage" type="file" accept="image/*" style="display:none" /></label><div class="thumb-grid" id="pThumb"><img src="' + data.image + '" /></div></div>',
                 actions: [
                     { key: "cancel", label: "Hủy", className: "btn-ghost" },
                     { key: "save", label: isEdit ? "Lưu thay đổi" : "Tạo sản phẩm", className: "btn-primary" }
                 ],
-                onAction: function (key, close) {
+                onAction: async function (key, close) {
                     if (key !== "save") {
                         close();
                         return;
                     }
+
+                    var specs = {
+                        cpu: byId("specCPU").value.trim(),
+                        ram: byId("specRAM").value.trim(),
+                        storage: byId("specStorage").value.trim(),
+                        screen: byId("specScreen").value.trim()
+                    };
 
                     var payload = {
                         id: isEdit ? data.id : byId("pId").value.trim(),
@@ -282,7 +356,8 @@
                         stock: Number(byId("pStock").value || 0),
                         status: byId("pStatus").value,
                         sold: data.sold || 0,
-                        image: data.image
+                        image: data.image,
+                        details: JSON.stringify(specs)
                     };
 
                     if (!payload.name || !payload.id) {
@@ -290,21 +365,42 @@
                         return;
                     }
 
-                    if (isEdit) {
-                        state.products = state.products.map(function (p) { return p.id === payload.id ? Object.assign({}, p, payload) : p; });
-                    } else {
-                        state.products.unshift(payload);
-                    }
+                    try {
+                        if (isEdit) {
+                            await AdminCore.api("/admin/products/" + payload.id, {
+                                method: "PUT",
+                                body: JSON.stringify(payload)
+                            });
+                            state.products = state.products.map(function (p) { return p.id === payload.id ? Object.assign({}, p, payload) : p; });
+                        } else {
+                            await AdminCore.api("/admin/products", {
+                                method: "POST",
+                                body: JSON.stringify(payload)
+                            });
+                            state.products.unshift(payload);
+                        }
 
-                    renderTable();
-                    close();
-                    AdminCore.toast(isEdit ? "Đã cập nhật sản phẩm" : "Đã thêm sản phẩm mới", "success");
+                        renderTable();
+                        close();
+                        AdminCore.toast(isEdit ? "Đã cập nhật sản phẩm" : "Đã thêm sản phẩm mới", "success");
+                    } catch (err) {
+                        AdminCore.toast(err.msg || "Lỗi khi lưu sản phẩm", "error");
+                    }
                 }
             });
 
             setTimeout(function () {
                 byId("pCategory").value = data.category;
                 byId("pStatus").value = data.status;
+                if (data.details) {
+                    try {
+                        var specs = JSON.parse(data.details);
+                        byId("specCPU").value = specs.cpu || "";
+                        byId("specRAM").value = specs.ram || "";
+                        byId("specStorage").value = specs.storage || "";
+                        byId("specScreen").value = specs.screen || "";
+                    } catch(e) {}
+                }
                 var pImage = byId("pImage");
                 if (pImage) {
                     pImage.addEventListener("change", function (event) {
@@ -391,35 +487,77 @@
                 AdminCore.pagination({ from: rows.length ? 1 : 0, to: rows.length, total: rows.length });
 
             document.querySelectorAll("[data-user-action='view']").forEach(function (btn) {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", async function () {
                     var id = btn.getAttribute("data-id");
-                    var user = state.users.find(function (u) { return u.id === id; });
-                    if (!user) {
-                        return;
+                    var user = state.users.find(function (u) { return String(u.id) === id; });
+                    if (!user) return;
+
+                    try {
+                        // Fetch order history for this user
+                        var history = await AdminCore.api("/admin/users/" + id + "/orders");
+                        var historyHtml = history.length 
+                            ? history.map(function(o) {
+                                return '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px dashed #eee">' +
+                                       '<span>#' + o.id + '</span>' +
+                                       '<span>' + AdminCore.formatCurrency(o.total) + '</span>' +
+                                       '<span>' + AdminCore.statusBadge("order", o.status) + '</span>' +
+                                       '</div>';
+                              }).join("")
+                            : '<div style="color:#667085;font-size:13px">Chưa có đơn hàng nào.</div>';
+
+                        AdminCore.openDrawer({
+                            title: "Chi tiết người dùng",
+                            bodyHtml:
+                                '<div style="display:grid;gap:12px">' +
+                                    '<div><strong>' + (user.name || user.username) + '</strong></div>' +
+                                    '<div style="height:1px;background:#e5e7eb;margin:2px 0 6px"></div>' +
+                                    '<div><strong>Thông tin tài khoản</strong></div>' +
+                                    '<div>Username: ' + user.username + '</div>' +
+                                    '<div>Email: ' + user.email + '</div>' +
+                                    '<div>SĐT: ' + (user.phone || "Chưa cập nhật") + '</div>' +
+                                    '<div class="form-field"><span class="form-label">Phân quyền (Role)</span>' +
+                                        '<select class="select" id="changeUserRole">' +
+                                            '<option value="user">User</option>' +
+                                            '<option value="staff">Staff</option>' +
+                                            '<option value="admin">Admin</option>' +
+                                        '</select>' +
+                                    '</div>' +
+                                    '<div>Trạng thái: ' + AdminCore.statusBadge("user", user.is_locked ? 'locked' : 'active') + '</div>' +
+                                    '<div style="height:1px;background:#e5e7eb;margin:2px 0 6px"></div>' +
+                                    '<div><strong>Lịch sử mua hàng</strong></div>' +
+                                    '<div style="max-height:200px;overflow-y:auto">' + historyHtml + '</div>' +
+                                "</div>",
+                            actions: [
+                                { key: "cancel", label: "Đóng", className: "btn-ghost" },
+                                { key: "saveRole", label: "Cập nhật Role", className: "btn-primary" }
+                            ],
+                            onAction: async function (key, close) {
+                                if (key === "saveRole") {
+                                    var newRole = document.getElementById("changeUserRole").value;
+                                    try {
+                                        await AdminCore.api("/admin/users/" + id + "/role", {
+                                            method: "PUT",
+                                            body: JSON.stringify({ role: newRole })
+                                        });
+                                        user.role = newRole;
+                                        AdminCore.toast("Đã cập nhật phân quyền", "success");
+                                        renderTable();
+                                    } catch (err) {
+                                        AdminCore.toast(err.msg || "Lỗi cập nhật role", "error");
+                                    }
+                                }
+                                close();
+                            }
+                        });
+
+                        setTimeout(function() {
+                            if(document.getElementById("changeUserRole")) {
+                                document.getElementById("changeUserRole").value = user.role;
+                            }
+                        }, 0);
+                    } catch (err) {
+                        AdminCore.toast("Không thể lấy lịch sử mua hàng", "error");
                     }
-                    AdminCore.openDrawer({
-                        title: "Chi tiết người dùng",
-                        bodyHtml:
-                            '<div style="display:grid;gap:8px">' +
-                                '<div><strong>' + user.name + '</strong></div>' +
-                                '<div style="height:1px;background:#e5e7eb;margin:2px 0 6px"></div>' +
-                                '<div><strong>Thông tin đăng ký</strong></div>' +
-                                '<div>Email: ' + user.email + '</div>' +
-                                '<div>SĐT: ' + user.phone + '</div>' +
-                                '<div>Kênh đăng ký: ' + (user.registerChannel || "Website") + '</div>' +
-                                '<div>Email xác thực: ' + (user.emailVerified ? '<span class="badge success">Đã xác thực</span>' : '<span class="badge warning">Chưa xác thực</span>') + '</div>' +
-                                '<div>Đăng ký bởi: ' + (user.registeredBy || "Self-service") + '</div>' +
-                                '<div>Role: <span class="badge info">' + user.role + '</span></div>' +
-                                '<div>Trạng thái: ' + AdminCore.statusBadge("user", user.status) + '</div>' +
-                                '<div>Ngày đăng ký: ' + user.joinedAt + '</div>' +
-                                '<div style="height:1px;background:#e5e7eb;margin:2px 0 6px"></div>' +
-                                '<div><strong>Lịch sử mua hàng</strong></div>' +
-                                '<div>Số đơn hàng: ' + user.orders + '</div>' +
-                                '<div>Tổng chi tiêu: ' + AdminCore.formatCurrency(user.totalSpent) + '</div>' +
-                            "</div>",
-                        actions: [{ key: "close", label: "Đóng", className: "btn-ghost" }],
-                        onAction: function (_, close) { close(); }
-                    });
                 });
             });
 
@@ -440,13 +578,18 @@
                             { key: "cancel", label: "Hủy", className: "btn-ghost" },
                             { key: "ok", label: "Xác nhận", className: "btn-primary" }
                         ],
-                        onAction: function (key, close) {
+                        onAction: async function (key, close) {
                             if (key === "ok") {
-                                user.status = nextStatus;
-                                AdminCore.toast("Đã cập nhật trạng thái tài khoản", "success");
+                                try {
+                                    await AdminCore.api("/admin/users/toggle-lock/" + id, { method: "PUT" });
+                                    user.status = nextStatus;
+                                    AdminCore.toast("Đã cập nhật trạng thái tài khoản", "success");
+                                    renderTable();
+                                } catch (err) {
+                                    AdminCore.toast(err.msg || "Lỗi khi cập nhật trạng thái", "error");
+                                }
                             }
                             close();
-                            renderTable();
                         }
                     });
                 });
@@ -467,11 +610,16 @@
                             { key: "cancel", label: "Hủy", className: "btn-ghost" },
                             { key: "ok", label: "Xóa tài khoản", className: "btn-danger" }
                         ],
-                        onAction: function (key, close) {
+                        onAction: async function (key, close) {
                             if (key === "ok") {
-                                state.users = state.users.filter(function (u) { return u.id !== id; });
-                                AdminCore.toast("Đã xóa tài khoản người dùng", "success");
-                                renderTable();
+                                try {
+                                    await AdminCore.api("/admin/users/delete/" + id, { method: "DELETE" });
+                                    state.users = state.users.filter(function (u) { return u.id !== id; });
+                                    AdminCore.toast("Đã xóa tài khoản người dùng", "success");
+                                    renderTable();
+                                } catch (err) {
+                                    AdminCore.toast(err.msg || "Lỗi khi xóa tài khoản", "error");
+                                }
                             }
                             close();
                         }
@@ -609,7 +757,7 @@
                     { key: "cancel", label: "Hủy", className: "btn-ghost" },
                     { key: "save", label: isEdit ? "Lưu" : "Tạo mới", className: "btn-primary" }
                 ],
-                onAction: function (key, close) {
+                onAction: async function (key, close) {
                     if (key !== "save") {
                         close();
                         return;
@@ -630,14 +778,26 @@
                         return;
                     }
 
-                    if (isEdit) {
-                        state.promotions = state.promotions.map(function (x) { return x.id === payload.id ? Object.assign({}, x, payload) : x; });
-                    } else {
-                        state.promotions.unshift(payload);
+                    try {
+                        if (isEdit) {
+                            await AdminCore.api("/admin/content/" + payload.id, {
+                                method: "PUT",
+                                body: JSON.stringify(payload)
+                            });
+                            state.promotions = state.promotions.map(function (x) { return x.id === payload.id ? Object.assign({}, x, payload) : x; });
+                        } else {
+                            await AdminCore.api("/admin/content", {
+                                method: "POST",
+                                body: JSON.stringify(payload)
+                            });
+                            state.promotions.unshift(payload);
+                        }
+                        renderTable();
+                        close();
+                        AdminCore.toast("Đã lưu nội dung", "success");
+                    } catch (err) {
+                        AdminCore.toast(err.msg || "Lỗi khi lưu nội dung", "error");
                     }
-                    renderTable();
-                    close();
-                    AdminCore.toast("Đã lưu nội dung", "success");
                 }
             });
 
@@ -692,12 +852,13 @@
 
         function orderTimeline(order) {
             var base = [
-                { status: "processing", time: order.createdAt, text: "Đơn hàng đã được tạo" },
-                { status: "shipping", time: "2026-03-25 08:30", text: "Đơn đã bàn giao đơn vị vận chuyển" },
-                { status: "completed", time: "2026-03-26 14:10", text: "Khách hàng nhận hàng thành công" }
+                { status: "processing", time: order.createdAt, text: "Đơn hàng đã được tạo" }
             ];
+            if (order.status === "completed") {
+                base.push({ status: "completed", time: "-", text: "Khách hàng nhận hàng thành công" });
+            }
             if (order.status === "cancelled") {
-                base.push({ status: "cancelled", time: "2026-03-25 10:15", text: "Đơn hàng đã hủy theo yêu cầu" });
+                base.push({ status: "cancelled", time: "-", text: "Đơn hàng đã hủy" });
             }
             return base;
         }
@@ -714,7 +875,6 @@
                                 return "<div><strong>" + o.customer + "</strong><div style='font-size:12px;color:#667085'>" + o.phone + "</div></div>";
                             }
                         },
-                        { label: "Sản phẩm", key: "items" },
                         { label: "Thanh toán", key: "payment" },
                         { label: "Vận chuyển", key: "shipping" },
                         { label: "Tổng tiền", render: function (o) { return AdminCore.formatCurrency(o.total); } },
@@ -735,9 +895,7 @@
                     var id = btn.getAttribute("data-id");
                     var action = btn.getAttribute("data-order-action");
                     var order = state.orders.find(function (x) { return x.id === id; });
-                    if (!order) {
-                        return;
-                    }
+                    if (!order) return;
 
                     if (action === "view") {
                         var timelineHtml = orderTimeline(order)
@@ -758,12 +916,8 @@
                                     '<div><strong>Tổng tiền:</strong> ' + AdminCore.formatCurrency(order.total) + '</div>' +
                                     '<div><strong>Timeline trạng thái</strong><div class="timeline">' + timelineHtml + '</div></div>' +
                                 "</div>",
-                            actions: [
-                                { key: "close", label: "Đóng", className: "btn-ghost" }
-                            ],
-                            onAction: function (key, close) {
-                                close();
-                            }
+                            actions: [{ key: "close", label: "Đóng", className: "btn-ghost" }],
+                            onAction: function (_, close) { close(); }
                         });
                     } else if (action === "edit") {
                         openOrderStatusModal(order);
@@ -776,42 +930,30 @@
             AdminCore.openModal({
                 title: "Cập nhật trạng thái đơn",
                 bodyHtml:
-                    '<label class="form-field">' +
-                        '<span class="form-label">Trạng thái</span>' +
-                        '<select class="select" id="oStatus">' +
-                            '<option value="processing">Đang xử lý</option>' +
-                            '<option value="shipping">Đang giao</option>' +
-                            '<option value="completed">Hoàn thành</option>' +
-                            '<option value="cancelled">Đã hủy</option>' +
-                        '</select>' +
-                    '</label>',
+                    '<label class="form-field"><span class="form-label">Trạng thái</span><select class="select" id="oStatus"><option value="processing">Đang xử lý</option><option value="shipping">Đang giao</option><option value="completed">Hoàn thành</option><option value="cancelled">Đã hủy</option></select></label>',
                 actions: [
                     { key: "cancel", label: "Hủy", className: "btn-ghost" },
                     { key: "save", label: "Lưu", className: "btn-primary" }
                 ],
-                onAction: function (key, close) {
+                onAction: async function (key, close) {
                     if (key === "save") {
-                        order.status = byId("oStatus").value;
-                        renderTable();
-                        AdminCore.toast("Đã cập nhật trạng thái đơn", "success");
+                        var newStatus = byId("oStatus").value;
+                        try {
+                            await AdminCore.api("/admin/orders/" + order.id + "/status", {
+                                method: "PUT",
+                                body: JSON.stringify({ status: newStatus })
+                            });
+                            order.status = newStatus;
+                            renderTable();
+                            AdminCore.toast("Đã cập nhật đơn hàng", "success");
+                        } catch (err) {
+                            AdminCore.toast(err.msg || "Lỗi cập nhật đơn", "error");
+                        }
                     }
                     close();
                 }
             });
-
-            setTimeout(function () {
-                byId("oStatus").value = order.status;
-            }, 0);
-        }
-
-        function nextOrderStatus(status) {
-            if (status === "processing") {
-                return "shipping";
-            }
-            if (status === "shipping") {
-                return "completed";
-            }
-            return status;
+            setTimeout(function () { byId("oStatus").value = order.status; }, 0);
         }
 
         ["orderSearch", "orderStatus"].forEach(function (id) {
@@ -825,6 +967,303 @@
             renderTable();
         });
 
+        renderTable();
+    }
+
+    function renderSupportPage() {
+        AdminCore.renderShell("support", "Hỗ trợ khách hàng", "Xem và phản hồi các yêu cầu tư vấn, hỗ trợ từ khách hàng");
+
+        AdminCore.setContent(
+            '<div class="admin-card"><div class="admin-card-body">' +
+                '<div class="filter-bar">' +
+                    '<input class="input" id="supportSearch" placeholder="Tìm theo tên hoặc tiêu đề..." style="min-width:260px" />' +
+                    '<select class="select" id="supportStatus"><option value="all">Tất cả trạng thái</option><option value="pending">Chờ xử lý</option><option value="resolved">Đã xử lý</option></select>' +
+                    '<button class="btn btn-ghost" id="supportReset">Reset</button>' +
+                "</div>" +
+            "</div></div>" +
+            '<article class="admin-card"><div class="admin-card-body" id="supportTableWrap"></div></article>'
+        );
+
+        function filteredSupport() {
+            var q = byId("supportSearch").value.trim().toLowerCase();
+            var s = byId("supportStatus").value;
+            return state.support.filter(function (item) {
+                var qMatch = !q || item.customer.toLowerCase().indexOf(q) !== -1 || item.subject.toLowerCase().indexOf(q) !== -1;
+                var sMatch = s === "all" || item.status === s;
+                return qMatch && sMatch;
+            });
+        }
+
+        function renderTable() {
+            var rows = filteredSupport();
+            byId("supportTableWrap").innerHTML =
+                AdminCore.table(
+                    [
+                        { label: "Ngày gửi", key: "createdAt" },
+                        {
+                            label: "Khách hàng",
+                            render: function (r) {
+                                return "<div><strong>" + r.customer + "</strong><div style='font-size:12px;color:#667085'>" + r.email + "</div></div>";
+                            }
+                        },
+                        { label: "Tiêu đề", key: "subject" },
+                        { label: "Trạng thái", render: function (r) { return AdminCore.statusBadge("support", r.status); } },
+                        {
+                            label: "Thao tác",
+                            render: function (r) {
+                                return '<div class="table-actions"><button class="btn btn-ghost" data-support-action="view" data-id="' + r.id + '"><i class="fas fa-eye"></i></button><button class="btn btn-outline" data-support-action="resolve" data-id="' + r.id + '"><i class="fas fa-check"></i></button></div>';
+                            }
+                        }
+                    ],
+                    rows
+                );
+
+            document.querySelectorAll("[data-support-action]").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    var id = btn.getAttribute("data-id");
+                    var action = btn.getAttribute("data-support-action");
+                    var req = state.support.find(function (x) { return String(x.id) === id; });
+                    if (!req) return;
+
+                    if (action === "view") {
+                        var isResolved = req.status === "resolved";
+                        AdminCore.openDrawer({
+                            title: "Chi tiết yêu cầu hỗ trợ",
+                            bodyHtml:
+                                '<div style="display:grid;gap:12px">' +
+                                    '<div><strong>Khách hàng:</strong> ' + req.customer + '</div>' +
+                                    '<div><strong>Liên hệ:</strong> ' + req.email + ' - ' + req.phone + '</div>' +
+                                    '<div><strong>Tiêu đề:</strong> ' + req.subject + '</div>' +
+                                    '<div style="background:#f9fafb;padding:12px;border-radius:6px;border:1px solid #e5e7eb"><strong>Nội dung:</strong><p>' + req.message + '</p></div>' +
+                                    '<div style="height:1px;background:#e5e7eb;margin:4px 0"></div>' +
+                                    '<div><strong>Gửi phản hồi cho khách hàng</strong></div>' +
+                                    (isResolved 
+                                        ? '<div style="background:#f0f9ff;padding:12px;border-radius:6px;border:1px solid #b9e6fe"><strong>Đã phản hồi:</strong><p>' + (req.response || "No response content") + '</p></div>'
+                                        : '<textarea class="textarea" id="supportReply" placeholder="Nhập nội dung tư vấn, giải đáp..." style="height:120px"></textarea>') +
+                                    '<div><strong>Trạng thái:</strong> ' + AdminCore.statusBadge("support", req.status) + '</div>' +
+                                "</div>",
+                            actions: [
+                                { key: "close", label: "Đóng", className: "btn-ghost" },
+                                (isResolved ? null : { key: "send", label: "Gửi phản hồi", className: "btn-primary" })
+                            ].filter(Boolean),
+                            onAction: async function (key, close) {
+                                if (key === "send") {
+                                    var replyText = document.getElementById("supportReply").value.trim();
+                                    if (!replyText) {
+                                        AdminCore.toast("Vui lòng nhập nội dung phản hồi", "error");
+                                        return;
+                                    }
+                                    try {
+                                        await AdminCore.api("/admin/support/" + id + "/respond", {
+                                            method: "PUT",
+                                            body: JSON.stringify({ response: replyText })
+                                        });
+                                        req.status = "resolved";
+                                        req.response = replyText;
+                                        renderTable();
+                                        AdminCore.toast("Đã gửi phản hồi thành công", "success");
+                                        close();
+                                    } catch (err) {
+                                        AdminCore.toast(err.msg || "Lỗi gửi phản hồi", "error");
+                                    }
+                                } else {
+                                    close();
+                                }
+                            }
+                        });
+                    } else if (action === "resolve") {
+                        AdminCore.openModal({
+                            title: "Xác nhận xử lý",
+                            bodyHtml: "<p>Đánh dấu yêu cầu của <strong>" + req.customer + "</strong> là đã xử lý xong?</p>",
+                            actions: [
+                                { key: "cancel", label: "Hủy", className: "btn-ghost" },
+                                { key: "ok", label: "Xác nhận", className: "btn-primary" }
+                            ],
+                            onAction: async function (key, close) {
+                                if (key === "ok") {
+                                    try {
+                                        await AdminCore.api("/admin/support/" + id + "/status", {
+                                            method: "PUT",
+                                            body: JSON.stringify({ status: "resolved" })
+                                        });
+                                        req.status = "resolved";
+                                        renderTable();
+                                        AdminCore.toast("Đã xử lý yêu cầu", "success");
+                                    } catch (err) {
+                                        AdminCore.toast(err.msg || "Lỗi cập nhật", "error");
+                                    }
+                                }
+                                close();
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        ["supportSearch", "supportStatus"].forEach(function (id) {
+            byId(id).addEventListener("input", renderTable);
+            byId(id).addEventListener("change", renderTable);
+        });
+
+        byId("supportReset").addEventListener("click", function () {
+            byId("supportSearch").value = "";
+            byId("supportStatus").value = "all";
+            renderTable();
+        });
+
+        renderTable();
+    }
+
+    function openStockImportModal(product) {
+        AdminCore.openModal({
+            title: "Nhập thêm hàng vào kho",
+            bodyHtml: '<p>Bạn đang nhập thêm hàng cho: <strong>' + product.name + '</strong></p>' +
+                      '<p>Số lượng hiện tại: <strong>' + product.stock + '</strong></p>' +
+                      '<label class="form-field"><span class="form-label">Số lượng nhập thêm</span>' +
+                      '<input type="number" class="input" id="importQty" value="10" min="1" /></label>',
+            actions: [
+                { key: "cancel", label: "Hủy", className: "btn-ghost" },
+                { key: "ok", label: "Xác nhận nhập", className: "btn-primary" }
+            ],
+            onAction: async function (key, close) {
+                if (key === "ok") {
+                    var qty = parseInt(document.getElementById("importQty").value);
+                    try {
+                        var res = await AdminCore.api("/admin/products/" + product.id + "/stock", {
+                            method: "PUT",
+                            body: JSON.stringify({ stock: qty })
+                        });
+                        product.stock = res.currentStock;
+                        renderTable();
+                        AdminCore.toast(res.msg, "success");
+                    } catch (err) {
+                        AdminCore.toast(err.msg || "Lỗi nhập kho", "error");
+                    }
+                }
+                close();
+            }
+        });
+    }
+
+    function renderBannersPage() {
+        AdminCore.renderShell("banners", "Quản lý Banner", "Quản lý hình ảnh quảng cáo và vị trí hiển thị trên trang chủ");
+
+        AdminCore.setContent(
+            '<div class="admin-card"><div class="admin-card-body">' +
+                '<div class="filter-bar">' +
+                    '<button class="btn btn-primary" id="addBannerBtn"><i class="fas fa-plus"></i> Thêm Banner mới</button>' +
+                "</div>" +
+            "</div></div>" +
+            '<article class="admin-card"><div class="admin-card-body" id="bannerTableWrap"></div></article>'
+        );
+
+        function renderTable() {
+            byId("bannerTableWrap").innerHTML = AdminCore.table(
+                [
+                    { label: "ID", key: "id" },
+                    { label: "Hình ảnh", render: function(b) { return '<img src="' + b.image + '" style="width:120px;height:60px;object-fit:cover;border-radius:4px" />'; } },
+                    { label: "Tiêu đề", key: "title" },
+                    { label: "Vị trí", key: "position" },
+                    { label: "Trạng thái", render: function(b) { return AdminCore.statusBadge("banner", b.status); } },
+                    { label: "Thao tác", render: function(b) {
+                        return '<div class="table-actions">' +
+                               '<button class="btn btn-ghost" data-banner-action="edit" data-id="' + b.id + '"><i class="fas fa-pen"></i></button>' +
+                               '<button class="btn btn-danger" data-banner-action="delete" data-id="' + b.id + '"><i class="fas fa-trash"></i></button>' +
+                               '</div>';
+                    }}
+                ],
+                state.banners
+            );
+
+            document.querySelectorAll("[data-banner-action]").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var id = btn.getAttribute("data-id");
+                    var action = btn.getAttribute("data-banner-action");
+                    var banner = state.banners.find(function(b) { return String(b.id) === id; });
+                    if (!banner) return;
+
+                    if (action === "edit") {
+                        openBannerModal(banner);
+                    } else if (action === "delete") {
+                        AdminCore.openModal({
+                            title: "Xác nhận xóa Banner",
+                            bodyHtml: "<p>Bạn có chắc muốn xóa banner này?</p>",
+                            actions: [
+                                { key: "cancel", label: "Hủy", className: "btn-ghost" },
+                                { key: "ok", label: "Xóa", className: "btn-danger" }
+                            ],
+                            onAction: async function(key, close) {
+                                if (key === "ok") {
+                                    try {
+                                        await AdminCore.api("/admin/banners/" + id, { method: "DELETE" });
+                                        state.banners = state.banners.filter(function(b) { return String(b.id) !== id; });
+                                        renderTable();
+                                        AdminCore.toast("Đã xóa banner", "success");
+                                    } catch (err) {
+                                        AdminCore.toast(err.msg || "Lỗi xóa banner", "error");
+                                    }
+                                }
+                                close();
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        function openBannerModal(banner) {
+            var isEdit = !!banner;
+            var data = banner || { title: "", image: "", link: "#", position: "main", status: "active" };
+
+            AdminCore.openModal({
+                title: isEdit ? "Chỉnh sửa Banner" : "Thêm Banner mới",
+                bodyHtml: '<div class="form-grid-2">' +
+                          '<label class="form-field"><span class="form-label">Tiêu đề</span><input class="input" id="bTitle" value="' + data.title + '" /></label>' +
+                          '<label class="form-field"><span class="form-label">Link liên kết</span><input class="input" id="bLink" value="' + data.link + '" /></label>' +
+                          '<label class="form-field"><span class="form-label">Vị trí</span><select class="select" id="bPos"><option value="main">Trang chủ (Chính)</option><option value="sub">Danh mục (Phụ)</option></select></label>' +
+                          '<label class="form-field"><span class="form-label">Trạng thái</span><select class="select" id="bStatus"><option value="active">Hiển thị</option><option value="hidden">Ẩn</option></select></label>' +
+                          '</div>' +
+                          '<label class="form-field" style="margin-top:10px"><span class="form-label">URL Hình ảnh</span><input class="input" id="bImg" value="' + data.image + '" /></label>',
+                actions: [
+                    { key: "cancel", label: "Hủy", className: "btn-ghost" },
+                    { key: "save", label: "Lưu", className: "btn-primary" }
+                ],
+                onAction: async function(key, close) {
+                    if (key === "save") {
+                        var payload = {
+                            title: byId("bTitle").value,
+                            link: byId("bLink").value,
+                            position: byId("bPos").value,
+                            status: byId("bStatus").value,
+                            image: byId("bImg").value
+                        };
+                        try {
+                            if (isEdit) {
+                                await AdminCore.api("/admin/banners/" + banner.id, { method: "PUT", body: JSON.stringify(payload) });
+                                Object.assign(banner, payload);
+                            } else {
+                                await AdminCore.api("/admin/banners", { method: "POST", body: JSON.stringify(payload) });
+                                state.banners = await AdminCore.api("/admin/banners");
+                            }
+                            renderTable();
+                            AdminCore.toast("Đã lưu banner", "success");
+                            close();
+                        } catch (err) {
+                            AdminCore.toast(err.msg || "Lỗi lưu banner", "error");
+                        }
+                    } else {
+                        close();
+                    }
+                }
+            });
+            setTimeout(function() {
+                byId("bPos").value = data.position;
+                byId("bStatus").value = data.status;
+            }, 0);
+        }
+
+        byId("addBannerBtn").addEventListener("click", function() { openBannerModal(null); });
         renderTable();
     }
 

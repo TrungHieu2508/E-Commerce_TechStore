@@ -30,7 +30,9 @@
         { key: "products", label: "Sản phẩm", icon: "fa-box-open", href: "products.html" },
         { key: "users", label: "Người dùng", icon: "fa-users", href: "users.html" },
         { key: "content", label: "Tin tức / Khuyến mãi", icon: "fa-bullhorn", href: "content.html" },
-        { key: "orders", label: "Đơn hàng", icon: "fa-receipt", href: "orders.html" }
+        { key: "banners", label: "Quản lý Banner", icon: "fa-images", href: "banners.html" },
+        { key: "orders", label: "Đơn hàng", icon: "fa-receipt", href: "orders.html" },
+        { key: "support", label: "Hỗ trợ khách hàng", icon: "fa-headset", href: "support.html" }
     ];
 
     function formatCurrency(value) {
@@ -62,6 +64,14 @@
                 shipping: { label: "Đang giao", tone: "info" },
                 completed: { label: "Hoàn thành", tone: "success" },
                 cancelled: { label: "Đã hủy", tone: "danger" }
+            },
+            banner: {
+                active: { label: "Hiển thị", tone: "success" },
+                hidden: { label: "Đã ẩn", tone: "neutral" }
+            },
+            support: {
+                pending: { label: "Chờ xử lý", tone: "warning" },
+                resolved: { label: "Đã xử lý", tone: "success" }
             }
         };
         var group = maps[kind] || {};
@@ -133,12 +143,21 @@
             '<button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>' +
             '<label class="admin-top-search"><i class="fas fa-search" style="color:#98a2b3"></i><input id="globalAdminSearch" placeholder="Tìm kiếm nhanh..." /></label>' +
             '<button class="btn btn-ghost" type="button" id="notifyBtn"><i class="fas fa-bell"></i></button>' +
+            '<button class="btn btn-ghost" type="button" id="logoutBtn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></button>' +
             '<div class="admin-avatar">AD</div>' +
             "</div>" +
             "</header>" +
             '<section class="admin-content" id="adminContent"></section>' +
             "</main>" +
             "</div>";
+
+        var logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", function () {
+                localStorage.removeItem("nextech_auth");
+                window.location.href = "../login.html";
+            });
+        }
 
         var btn = document.getElementById("mobileMenuBtn");
         if (btn) {
@@ -368,6 +387,36 @@
             "</svg>";
     }
 
+    var API_BASE = "http://localhost:5000";
+
+    async function api(path, options) {
+        options = options || {};
+        var raw = localStorage.getItem("nextech_auth");
+        var auth = raw ? JSON.parse(raw) : null;
+        
+        var headers = Object.assign({
+            "Content-Type": "application/json",
+            "Authorization": auth ? "Bearer " + auth.access_token : ""
+        }, options.headers || {});
+
+        try {
+            var response = await fetch(API_BASE + path, Object.assign({}, options, { headers: headers }));
+            var data = await response.json();
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    // Unauthorized/Forbidden
+                    toast(data.msg || "Hết phiên đăng nhập", "error");
+                    // Optional: redirect to login
+                }
+                throw data;
+            }
+            return data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+
     window.AdminCore = {
         menuItems: menuItems,
         formatCurrency: formatCurrency,
@@ -382,6 +431,7 @@
         openDrawer: openDrawer,
         toast: toast,
         drawLineChart: drawLineChart,
-        escapeHtml: escapeHtml
+        escapeHtml: escapeHtml,
+        api: api
     };
 })();
