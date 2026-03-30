@@ -141,7 +141,7 @@
             "</div>" +
             '<div class="admin-top-right">' +
             '<button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>' +
-            '<label class="admin-top-search"><i class="fas fa-search" style="color:#98a2b3"></i><input id="globalAdminSearch" placeholder="Tìm kiếm nhanh..." /></label>' +
+            '<label class="admin-top-search"><i class="fas fa-search" style="color:#98a2b3"></i><input id="globalAdminSearch" placeholder="Tìm kiếm nhanh..." /><div class="admin-search-dropdown hidden" id="adminSearchResults"></div></label>' +
             '<button class="btn btn-ghost" type="button" id="notifyBtn"><i class="fas fa-bell"></i></button>' +
             '<button class="btn btn-ghost" type="button" id="logoutBtn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></button>' +
             '<div class="admin-avatar">AD</div>' +
@@ -175,6 +175,8 @@
                 toast("Thông báo mới đã được đồng bộ", "success");
             });
         }
+
+        setupGlobalAdminSearch();
     }
 
     function setContent(html) {
@@ -274,6 +276,96 @@
                 }
             });
         });
+    }
+
+    var adminSearchBehaviorAttached = false;
+    var adminSearchDebounce = null;
+
+    function hideGlobalAdminSearchResults() {
+        var panel = document.getElementById("adminSearchResults");
+        if (panel) {
+            panel.classList.add("hidden");
+            panel.innerHTML = "";
+        }
+    }
+
+    function renderGlobalAdminSearchResults(items, query) {
+        var panel = document.getElementById("adminSearchResults");
+        if (!panel) {
+            return;
+        }
+        if (!items || !items.length) {
+            panel.innerHTML = '<div class="search-empty">Không tìm thấy kết quả cho <strong>' + escapeHtml(query) + '</strong></div>';
+            panel.classList.remove("hidden");
+            return;
+        }
+
+        panel.innerHTML = items
+            .map(function (item) {
+                return (
+                    '<div class="search-result-item" data-url="' + escapeHtml(item.url) + '">' +
+                    '<div>' +
+                    '<div class="search-result-title">' + escapeHtml(item.title) + '</div>' +
+                    '<div class="search-result-meta">' + escapeHtml(item.subtitle) + '</div>' +
+                    '</div>' +
+                    '<span class="search-result-badge">' + escapeHtml(item.typeLabel) + '</span>' +
+                    '</div>'
+                );
+            })
+            .join("");
+
+        panel.classList.remove("hidden");
+        panel.querySelectorAll(".search-result-item").forEach(function (node) {
+            node.addEventListener("click", function () {
+                window.location.href = node.getAttribute("data-url");
+            });
+        });
+    }
+
+    function setupGlobalAdminSearch() {
+        var searchInput = document.getElementById("globalAdminSearch");
+        var panel = document.getElementById("adminSearchResults");
+        if (!searchInput || !panel) {
+            return;
+        }
+
+        searchInput.oninput = function () {
+            var query = this.value.trim();
+            if (!query) {
+                hideGlobalAdminSearchResults();
+                return;
+            }
+
+            clearTimeout(adminSearchDebounce);
+            adminSearchDebounce = setTimeout(async function () {
+                try {
+                    var data = await api("/admin/search?q=" + encodeURIComponent(query));
+                    renderGlobalAdminSearchResults(data.results || [], query);
+                } catch (error) {
+                    hideGlobalAdminSearchResults();
+                }
+            }, 250);
+        };
+
+        searchInput.onfocus = function () {
+            if (this.value.trim()) {
+                this.dispatchEvent(new Event("input"));
+            }
+        };
+
+        if (!adminSearchBehaviorAttached) {
+            document.addEventListener("click", function (e) {
+                var panel = document.getElementById("adminSearchResults");
+                var input = document.getElementById("globalAdminSearch");
+                if (!panel || !input) {
+                    return;
+                }
+                if (!input.contains(e.target) && !panel.contains(e.target)) {
+                    hideGlobalAdminSearchResults();
+                }
+            });
+            adminSearchBehaviorAttached = true;
+        }
     }
 
     function openDrawer(opts) {

@@ -717,9 +717,17 @@
                             ],
                             onAction: function (key, close) {
                                 if (key === "ok") {
-                                    state.promotions = state.promotions.filter(function (x) { return x.id !== id; });
-                                    renderTable();
-                                    AdminCore.toast("Đã xóa nội dung", "success");
+                                    AdminCore.api("/admin/content/" + id, {
+                                        method: "DELETE"
+                                    })
+                                        .then(function () {
+                                            state.promotions = state.promotions.filter(function (x) { return x.id !== id; });
+                                            renderTable();
+                                            AdminCore.toast("Đã xóa nội dung", "success");
+                                        })
+                                        .catch(function (err) {
+                                            AdminCore.toast(err.msg || "Lỗi khi xóa nội dung", "error");
+                                        });
                                 }
                                 close();
                             }

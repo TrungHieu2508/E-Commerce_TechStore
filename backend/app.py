@@ -229,7 +229,7 @@ def toggle_lock(user_id):
     if get_jwt().get("role") != "admin": return jsonify({"msg": "Quyền admin yêu cầu"}), 403
     user = db.session.get(User, user_id)
     if user:
-        if user.username == 'admin': return jsonify({"msg": "Không thể khóa Admin"}), 400
+        if user.username == 'admin@nextech.vn': return jsonify({"msg": "Không thể khóa Admin"}), 400
         user.is_locked = not user.is_locked
         db.session.commit()
         return jsonify({"msg": "Thành công"})
@@ -252,7 +252,7 @@ def update_user_role(user_id):
     if get_jwt().get("role") != "admin": return jsonify({"msg": "Quyền admin yêu cầu"}), 403
     user = db.session.get(User, user_id)
     if not user: return jsonify({"msg": "Không tìm thấy"}), 404
-    if user.username == 'admin': return jsonify({"msg": "Không thể đổi role Admin"}), 400
+    if user.username == 'admin@nextech.vn': return jsonify({"msg": "Không thể đổi role Admin"}), 400
     data = request.get_json()
     user.role = data.get('role', user.role)
     db.session.commit()
@@ -281,6 +281,72 @@ def list_products():
         "price": p.price, "stock": p.stock, "sold": p.sold, 
         "status": p.status, "image": p.image, "details": p.details
     } for p in products])
+
+@app.route('/admin/search', methods=['GET'])
+@jwt_required()
+def admin_search():
+    if get_jwt().get("role") != "admin":
+        return jsonify({"msg": "Quyền admin yêu cầu"}), 403
+
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify({"results": []})
+
+    term = f"%{q}%"
+    products = Product.query.filter((Product.id.ilike(term)) | (Product.name.ilike(term))).limit(5).all()
+    contents = Content.query.filter((Content.id.ilike(term)) | (Content.title.ilike(term)) | (Content.body.ilike(term))).limit(5).all()
+    users = User.query.filter((User.username.ilike(term)) | (User.email.ilike(term)) | (User.phone.ilike(term))).limit(5).all()
+    orders = Order.query.filter((Order.id.ilike(term)) | (Order.customer_name.ilike(term)) | (Order.phone.ilike(term))).limit(5).all()
+    support = SupportRequest.query.filter((SupportRequest.subject.ilike(term)) | (SupportRequest.customer_name.ilike(term)) | (SupportRequest.message.ilike(term))).limit(5).all()
+
+    results = []
+    for p in products:
+        results.append({
+            "id": p.id,
+            "title": p.name,
+            "subtitle": p.category or "Sản phẩm",
+            "type": "product",
+            "typeLabel": "Sản phẩm",
+            "url": "products.html"
+        })
+    for c in contents:
+        results.append({
+            "id": c.id,
+            "title": c.title,
+            "subtitle": c.type + " • " + (c.publish_at or "-"),
+            "type": "content",
+            "typeLabel": "Tin tức",
+            "url": "content.html"
+        })
+    for u in users:
+        results.append({
+            "id": str(u.id),
+            "title": u.username,
+            "subtitle": u.email or u.phone or "Người dùng",
+            "type": "user",
+            "typeLabel": "Người dùng",
+            "url": "users.html"
+        })
+    for o in orders:
+        results.append({
+            "id": o.id,
+            "title": o.customer_name,
+            "subtitle": o.status + " • " + str(o.total_price) + " đ",
+            "type": "order",
+            "typeLabel": "Đơn hàng",
+            "url": "orders.html"
+        })
+    for s in support:
+        results.append({
+            "id": str(s.id),
+            "title": s.subject or "Yêu cầu hỗ trợ",
+            "subtitle": s.customer_name + " • " + s.status,
+            "type": "support",
+            "typeLabel": "Hỗ trợ",
+            "url": "support.html"
+        })
+
+    return jsonify({"results": results})
 
 @app.route('/admin/products', methods=['POST'])
 @jwt_required()
