@@ -564,7 +564,7 @@
             document.querySelectorAll("[data-user-action='switch']").forEach(function (cb) {
                 cb.addEventListener("change", function () {
                     var id = cb.getAttribute("data-id");
-                    var user = state.users.find(function (u) { return u.id === id; });
+                    var user = state.users.find(function (u) { return String(u.id) === id; });
                     if (!user) {
                         return;
                     }
@@ -598,14 +598,14 @@
             document.querySelectorAll("[data-user-action='delete']").forEach(function (btn) {
                 btn.addEventListener("click", function () {
                     var id = btn.getAttribute("data-id");
-                    var user = state.users.find(function (u) { return u.id === id; });
+                    var user = state.users.find(function (u) { return String(u.id) === id; });
                     if (!user) {
                         return;
                     }
 
                     AdminCore.openModal({
                         title: "Xác nhận xóa tài khoản",
-                        bodyHtml: '<p>Bạn có chắc muốn xóa tài khoản <strong>' + user.name + '</strong> (' + user.id + ')?</p><p style="color:#b42318;font-size:12px">Thao tác này hiện chỉ mô phỏng ở giao diện Admin.</p>',
+                        bodyHtml: '<p>Bạn có chắc muốn xóa tài khoản <strong>' + user.name + '</strong> (' + user.id + ')?</p>',
                         actions: [
                             { key: "cancel", label: "Hủy", className: "btn-ghost" },
                             { key: "ok", label: "Xóa tài khoản", className: "btn-danger" }
