@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexTech Đăng nhập</title>
+    <link rel="icon" href="../assets/img/LOGO1.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f4f7fe;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .login-container {
+        width: 100%;
+        max-width: 380px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        background: #fff;
+        border-top: 5px solid transparent;
+        transition: all 0.3s;
+        position: relative; /* Thêm để định vị nút quay lại */
+      }
+
+      /* Nút X quay lại góc trên bên phải */
+      .back-home-corner {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #999;
+        text-decoration: none;
+        font-size: 20px;
+        transition: 0.3s;
+      }
+      .back-home-corner:hover {
+        color: #333;
+        transform: scale(1.1);
+      }
+
+      .logo img {
+        max-width: 150px;
+        margin-bottom: 15px;
+      }
+      h2 {
+        font-size: 22px;
+        margin-bottom: 25px;
+        color: #1a234a;
+      }
+      .form-group {
+        text-align: left;
+        margin-bottom: 15px;
+        position: relative;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        font-size: 0.85em;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #dcdfe6;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 15px;
+      }
+      .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 35px;
+        cursor: pointer;
+        color: #999;
+      }
+      .btn-login {
+        width: 100%;
+        padding: 12px;
+        background: #5d87ff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 16px;
+      }
+
+      .admin-section {
+        margin-top: 25px;
+        border-top: 1px dashed #ddd;
+        padding-top: 20px;
+      }
+      .admin-login-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #6c757d;
+        text-decoration: none;
+        border: 1px solid #dcdfe6;
+        border-radius: 20px;
+        background: #f9f9f9;
+        transition: 0.3s;
+      }
+      .admin-login-btn:hover {
+        color: #d32f2f;
+        border-color: #d32f2f;
+        background: #fff5f5;
+        transform: translateY(-2px);
+      }
+
+      footer {
+        margin-top: 20px;
+        font-size: 0.85em;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        line-height: 1.6;
+      }
+      footer a {
+        color: #5d87ff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      /* Link tiếp tục với tư cách khách */
+      .continue-guest {
+        display: block;
+        margin-top: 10px;
+        color: #666;
+        text-decoration: none;
+        font-style: italic;
+      }
+      .continue-guest:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container" id="loginBox">
+      <a href="index.html" class="back-home-corner" title="Quay lại trang chủ">
+        <i class="fas fa-times"></i>
+      </a>
+
+      <div class="logo"><img src="../assets/img/Logo_white.png" /></div>
+      <h2 id="loginTitle">Đăng nhập khách hàng</h2>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Tên đăng nhập</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="Nhập tên đăng nhập"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Nhập mật khẩu"
+            required
+          />
+          <i class="fas fa-eye toggle-password" id="eyeIcon"></i>
+        </div>
+        <button type="submit" class="btn-login" id="mainBtn">Đăng nhập</button>
+      </form>
+
+      <div class="admin-section">
+        <a
+          href="javascript:void(0)"
+          class="admin-login-btn"
+          id="toggleAdminView"
+        >
+          <i class="fas fa-user-shield"></i> Chế độ Quản trị viên
+        </a>
+      </div>
+
+      <footer>
+        <p>Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a></p>
+        <a href="index.html" class="continue-guest"
+          >Tiếp tục sử dụng với tư cách khách</a
+        >
+      </footer>
+    </div>
+
+    <script>
+      let isAdminView = false;
+
+      // Xử lý Ẩn/Hiện mật khẩu
+      document.getElementById("eyeIcon").addEventListener("click", function () {
+        const pwd = document.getElementById("password");
+        const isPass = pwd.type === "password";
+        pwd.type = isPass ? "text" : "password";
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+      });
+
+      // Chuyển đổi giao diện Admin/Khách hàng
+      const toggleBtn = document.getElementById("toggleAdminView");
+      toggleBtn.addEventListener("click", function () {
+        isAdminView = !isAdminView;
+        const title = document.getElementById("loginTitle");
+        const box = document.getElementById("loginBox");
+        const btn = document.getElementById("mainBtn");
+
+        if (isAdminView) {
+          title.innerText = "HỆ THỐNG ĐĂNG NHẬP ADMIN";
+          title.style.color = "#d32f2f";
+          this.innerHTML = '<i class="fas fa-user"></i> Quay lại Khách hàng';
+          this.style.color = "#d32f2f";
+          this.style.borderColor = "#d32f2f";
+          btn.style.background = "#d32f2f";
+          box.style.borderTopColor = "#d32f2f";
+        } else {
+          title.innerText = "Đăng nhập khách hàng";
+          title.style.color = "#1a234a";
+          this.innerHTML =
+            '<i class="fas fa-user-shield"></i> Chế độ Quản trị viên';
+          this.style.color = "#6c757d";
+          this.style.borderColor = "#dcdfe6";
+          btn.style.background = "#5d87ff";
+          box.style.borderTopColor = "transparent";
+        }
+      });
+
+      // Xử lý gửi dữ liệu đăng nhập
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const required_role = isAdminView ? "admin" : "user";
+
+          try {
+            const res = await fetch("http://127.0.0.1:5000/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password, required_role }),
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+              localStorage.setItem("token", data.access_token);
+              localStorage.setItem("role", data.role);
+              localStorage.setItem("username", data.username);
+              alert("Đăng nhập thành công!");
+              window.location.href =
+                data.role === "admin" ? "admin.html" : "index.html";
+            } else {
+              alert(data.msg);
+            }
+          } catch (err) {
+            alert("Lỗi: Không thể kết nối tới Server Backend!");
+          }
+        });
+    </script>
+  </body>
+</html>

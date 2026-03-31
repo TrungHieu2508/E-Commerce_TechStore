@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chính sách bảo hành & Hậu mãi - NexTech</title>
+    <link rel="stylesheet" href="../assets/CSS/styles.css" />
+    <link rel="stylesheet" href="../assets/CSS/product-detail.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="icon" href="../assets/img/LOGO1.png" type="image/x-icon" />
+    <style>
+      /* Container dùng chung */
+      .container {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      /* --- Header Promotion --- */
+      .header-promotion {
+        background-color: #0080ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0;
+        gap: 20px;
+        height: 50px;
+        color: white;
+        font-weight: bold;
+      }
+
+      .promo-button {
+        background: linear-gradient(to bottom, #ffdb2c 0%, #ff9500 100%);
+        color: #ffffff;
+        font-weight: 900;
+        padding: 8px 20px;
+        border-radius: 6px;
+        border: 1px solid #e68a00;
+        cursor: pointer;
+      }
+
+      /* --- Main Header --- */
+      .main-header {
+        background-color: #1a234a;
+        color: white;
+        padding: 30px 0;
+        height: 100px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo-img {
+        max-height: 90px;
+      }
+
+      /* Search Bar */
+      .search-bar {
+        display: flex;
+        flex-grow: 0.6;
+        background: white;
+        border-radius: 5px;
+        margin: 0 20px;
+        position: relative;
+        overflow: visible; /* 🔥 FIX */
+      }
+
+      .search-bar input {
+        border: none;
+        padding: 10px 15px;
+        width: 100%;
+        outline: none;
+      }
+
+      .header-tools {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .category-btn,
+      .login-btn {
+        background-color: #0076df;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .tool-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+      }
+      .tool-item i {
+        font-size: 18px;
+        color: #007bff;
+      }
+
+      /* --- Sub Nav --- */
+      .sub-nav {
+        background: white;
+        border-bottom: 1px solid #ddd;
+        padding: 12px 0;
+        z-index: 1;
+        top: 100px;
+      }
+
+      .sub-nav-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .nav-link {
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #444;
+      }
+
+      /* --- NỘI DUNG CHÍNH SÁCH BẢO HÀNH --- */
+      .warranty-page {
+        background-color: #f4f7f9;
+        padding: 50px 0;
+      }
+
+      .warranty-card {
+        background: #fff;
+        padding: 60px;
+        border-radius: 4px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        color: #333;
+        line-height: 1.8;
+      }
+
+      .warranty-card h1 {
+        color: #1a234a;
+        font-size: 26px;
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .warranty-intro {
+        text-align: center;
+        max-width: 900px;
+        margin: 0 auto 45px;
+        color: #555;
+        font-size: 16px;
+      }
+
+      .warranty-section {
+        margin-bottom: 45px;
+      }
+
+      .warranty-section h2 {
+        color: #0076df;
+        font-size: 18px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+      }
+
+      .warranty-section h2::before {
+        content: "";
+        display: inline-block;
+        width: 4px;
+        height: 18px;
+        background-color: #1a234a;
+        margin-right: 12px;
+      }
+
+      .warranty-list {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .warranty-list li {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 12px;
+      }
+
+      .warranty-list li::before {
+        content: "•";
+        color: #0076df;
+        font-weight: bold;
+        font-size: 20px;
+        position: absolute;
+        left: 5px;
+        top: -2px;
+      }
+
+      .step-box {
+        background-color: #fdfdfd;
+        border: 1px solid #eee;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #0076df;
+      }
+
+      .step-title {
+        font-weight: bold;
+        color: #1a234a;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .highlight-box {
+        background-color: #fff9e6;
+        padding: 25px;
+        border-radius: 4px;
+        border: 1px dashed #ffcc00;
+      }
+
+      .contact-center {
+        background-color: #1a234a;
+        color: #fff;
+        padding: 40px;
+        margin-top: 50px;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      .contact-center h2 {
+        color: #fff;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+        justify-content: center;
+      }
+
+      .contact-center h2::before {
+        background-color: #0080ff;
+      }
+
+      .contact-details p {
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .contact-details strong {
+        color: #00bcff;
+      }
+
+      /* --- Footer --- */
+      .main-footer {
+        background-color: white;
+        padding: 50px 0;
+        border-top: 1px solid #eee;
+        margin-top: 50px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+      }
+
+      .footer-col h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #000;
+      }
+      .footer-col ul li {
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #666;
+        list-style: none;
+      }
+      .hover-col li a:hover {
+        color: #0076df;
+      }
+      .blue-text {
+        color: #007bff;
+        font-weight: bold;
+      }
+
+      .social-links {
+        margin-top: 60px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+      .social-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .icons {
+        display: flex;
+        gap: 12px;
+      }
+
+      @media (max-width: 992px) {
+        .header-tools,
+        .sep {
+          display: none;
+        }
+        .footer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .main-header {
+          height: auto;
+          padding: 15px 0;
+        }
+        .warranty-card {
+          padding: 30px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar-overlay"></div>
+    <!-- Header promotion: chỉ hiển thị dòng chữ "Mua PC tặng màn 240Hz" -->
+    <div class="header-promotion">
+      <button class="promo-button">MUA LAPTOP</button>
+      <span class="promo-text"
+        ><span class="promo-brand">NXT</span> | TẶNG MÀN OLED 240Hz</span
+      >
+    </div>
+
+    <header class="main-header">
+      <div class="container header-content">
+        <div class="logo">
+          <a href="index.html">
+            <img
+              src="../assets/img/LOGO.png"
+              alt="NexTech - Trang chủ"
+              class="logo-img"
+            />
+          </a>
+        </div>
+
+        <div class="category-btn"><i class="fas fa-bars"></i> Danh mục</div>
+
+        <div class="search-bar">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Bạn cần tìm gì?"
+            autocomplete="off"
+          />
+          <button type="button" id="searchBtn">
+            <i class="fas fa-search"></i>
+          </button>
+
+          <!-- QUAN TRỌNG -->
+          <div id="searchDropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="header-tools">
+          <a href="tel:19001234" class="tool-item">
+            <i class="fas fa-phone-alt"></i>
+            <div class="text">
+              <span>Hotline</span>
+              <strong>1900.1234</strong>
+            </div>
+          </a>
+
+          <a href="./Showroom.html" class="tool-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div class="text">
+              <span>Hệ thống</span>
+              <strong>cửa hàng</strong>
+            </div>
+          </a>
+
+          <a href="./Tra_cuu.html" class="tool-item">
+            <i class="fas fa-box"></i>
+            <div class="text">
+              <span>Tra cứu</span>
+              <strong>đơn hàng</strong>
+            </div>
+          </a>
+
+          <div id="user-account" class="header-tools">
+            <a href="./login.html" class="login-btn" id="user-display">
+              <i class="fas fa-user-circle"></i>
+              <span>Đăng nhập</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="sub-nav">
+      <div class="container sub-nav-flex">
+        <a href="./Laptop.html" class="nav-link"
+          ><i class="fa-solid fa-tags"></i> Mua Laptop tặng màn 240Hz</a
+        >
+        <span class="sep"></span>
+        <a href="./Hotdeal.html" class="nav-link"
+          ><i class="fa-solid fa-fire-flame-curved"></i> Hot Deal | Laptop</a
+        >
+        <span class="sep"></span>
+        <a href="https://gearvn.com/blogs/all" class="nav-link"
+          ><i class="fa-solid fa-newspaper"></i> Tin tức</a
+        >
+        <span class="sep"></span>
+        <a href="./dichvu.html" class="nav-link"
+          ><i class="fa-solid fa-screwdriver-wrench"></i> Dịch vụ kỹ thuật</a
+        >
+        <span class="sep"></span>
+        <a href="./thucudoimoi.html" class="nav-link"
+          ><i class="fa-solid fa-rotate"></i> Thu cũ đổi mới</a
+        >
+        <span class="sep"></span>
+        <a href="./tracuubaohanh.html" class="nav-link"
+          ><i class="fa-solid fa-shield-check"></i> Tra cứu bảo hành</a
+        >
+      </div>
+    </nav>
+
+    <!-- Quang cao -->
+
+    <div class="main-container-top">
+      <!-- Sidebar với banner dưới -->
+      <div class="sidebar-left">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <ul>
+            <li>
+              <i class="fa-solid fa-mobile-screen-button"></i>
+              <span>Điện thoại</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Iphone.html">iPhone</a></li>
+                  <li><a href="../pages/SamSung.html">Samsung</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li>
+              <i class="fa-solid fa-laptop-code"></i>
+              <span>Laptop</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Laptop.html">Dell</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-microchip"></i>
+              <span>Main, CPU, VGA</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/CPU.html">CPU AMD</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li>
+              <i class="fa-solid fa-memory"></i>
+              <span>Ổ cứng, RAM, Thẻ nhớ</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/RAM.html">RAM DDR4</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-clock"></i>
+              <span>SMARTWATCH</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/SmartWatch.html">Smart Watch</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-keyboard"></i>
+              <span>Bàn phím</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Banphim.html">Bàn phím cơ VGN</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-desktop"></i>
+              <span>Màn hình</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Manhinh.html">Asus</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-hands-helping"></i>
+              <span>Dịch vụ & khác</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="./Chinhsachbaohanh.html">Bảo hành</a></li>
+                  <li><a href="./dichvu.html">Lắp ráp</a></li>
+                  <li><a href="./dichvu.html">Vệ sinh</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+
+    <main class="warranty-page">
+      <div class="container">
+        <article class="warranty-card">
+          <h1>CHÍNH SÁCH BẢO HÀNH & HẬU MÃI NEXTECH</h1>
+
+          <p class="warranty-intro">
+            Tại NexTech, chúng tôi hiểu rằng thiết bị công nghệ là công cụ làm
+            việc và giải trí thiết yếu của quý khách. Vì vậy, chính sách bảo
+            hành được xây dựng để đảm bảo quyền lợi tối đa và sự hỗ trợ nhanh
+            nhất cho khách hàng.
+          </p>
+
+          <section class="warranty-section">
+            <h2>1. ĐIỀU KIỆN BẢO HÀNH MIỄN PHÍ</h2>
+            <p>Sản phẩm được bảo hành miễn phí nếu hội đủ các điều kiện sau:</p>
+            <ul class="warranty-list">
+              <li>
+                Sản phẩm còn trong thời hạn bảo hành (tính từ ngày mua hàng ghi
+                trên hóa đơn hoặc kích hoạt bảo hành điện tử).
+              </li>
+              <li>
+                Có tem bảo hành của NexTech hoặc của nhà sản xuất/nhà phân phối
+                còn nguyên vẹn (không rách, không tẩy xóa, không bị dán đè).
+              </li>
+              <li>
+                Sản phẩm bị lỗi kỹ thuật do nhà sản xuất (lỗi phần cứng, lỗi
+                linh kiện bên trong).
+              </li>
+              <li>
+                Số Serial/IMEI trên sản phẩm phải trùng khớp với thông tin trên
+                hệ thống quản lý của NexTech.
+              </li>
+            </ul>
+          </section>
+
+          <section class="warranty-section">
+            <h2>2. TRƯỜNG HỢP TỪ CHỐI BẢO HÀNH</h2>
+            <p>
+              Rất tiếc, NexTech không thể bảo hành miễn phí đối với các trường
+              hợp:
+            </p>
+            <ul class="warranty-list">
+              <li>Sản phẩm hết hạn bảo hành.</li>
+              <li>
+                Tem bảo hành bị rách, vỡ, bị biến dạng hoặc có dấu hiệu bị tháo
+                dỡ linh kiện bên trong.
+              </li>
+              <li>
+                Sản phẩm bị hư hỏng do tác động vật lý: Rơi vỡ, móp méo, trầy
+                xước, cong vênh, bị chất lỏng xâm nhập hoặc cháy nổ do nguồn
+                điện không ổn định.
+              </li>
+              <li>
+                Hư hỏng do sử dụng sai cách, tự ý cài đặt phần mềm không tương
+                thích hoặc can thiệp vào BIOS/Firmware trái phép.
+              </li>
+              <li>
+                Hư hỏng do thiên tai, côn trùng (gián, chuột...) xâm nhập vào
+                bên trong thiết bị.
+              </li>
+            </ul>
+          </section>
+
+          <section class="warranty-section">
+            <h2>3. QUY TRÌNH BẢO HÀNH TẠI NEXTECH</h2>
+            <div class="step-box">
+              <span class="step-title">Bước 1: Tiếp nhận</span>
+              <p>
+                Khách hàng mang sản phẩm trực tiếp đến cửa hàng hoặc liên hệ
+                Hotline 0947.266.276 để mô tả tình trạng lỗi.
+              </p>
+            </div>
+            <div class="step-box">
+              <span class="step-title">Bước 2: Kiểm tra</span>
+              <p>
+                Bộ phận kỹ thuật UTH Service tiếp nhận, kiểm tra sơ bộ và ghi
+                biên nhận.
+              </p>
+            </div>
+            <div class="step-box">
+              <span class="step-title">Bước 3: Xử lý</span>
+              <p>
+                Chuyển sản phẩm về Trung tâm bảo hành chính hãng (nếu lỗi nặng)
+                hoặc xử lý trực tiếp tại cửa hàng.
+              </p>
+            </div>
+            <div class="step-box">
+              <span class="step-title">Bước 4: Bàn giao</span>
+              <p>
+                Thông báo tình trạng và hẹn ngày trả máy cho khách hàng (Thông
+                thường từ 3 - 7 ngày làm việc).
+              </p>
+            </div>
+          </section>
+
+          <section class="warranty-section">
+            <h2>4. CHÍNH SÁCH ĐỔI TRẢ (1 ĐỔI 1)</h2>
+            <ul class="warranty-list">
+              <li>
+                <strong>Sản phẩm lỗi trong 07 ngày đầu:</strong> Quý khách được
+                đổi ngay sản phẩm mới cùng loại nếu máy có lỗi phần cứng từ nhà
+                sản xuất (Yêu cầu sản phẩm còn đầy đủ hộp, phụ kiện và không
+                trầy xước).
+              </li>
+              <li>
+                <strong>Linh kiện rời (RAM, ổ cứng, CPU):</strong> Áp dụng chính
+                sách 1 đổi 1 ngay lập tức trong suốt thời gian bảo hành nếu có
+                lỗi kỹ thuật (Tùy thuộc vào tình trạng kho hàng).
+              </li>
+            </ul>
+          </section>
+
+          <section class="warranty-section">
+            <h2>5. DỊCH VỤ BẢO HÀNH TẠI NHÀ (HỖ TRỢ ĐẶC BIỆT)</h2>
+            <p>
+              Dành riêng cho khách hàng mua bộ PC hoặc các thiết bị cồng kềnh
+              tại NexTech:
+            </p>
+            <div class="highlight-box">
+              <ul class="warranty-list">
+                <li>
+                  Quý khách có thể yêu cầu kỹ thuật viên UTH Service đến kiểm
+                  tra và tiếp nhận bảo hành tận nơi (Có phụ thu phí di chuyển
+                  tùy khoảng cách).
+                </li>
+                <li>
+                  Hỗ trợ cho mượn thiết bị thay thế tạm thời trong thời gian chờ
+                  bảo hành (Áp dụng cho các gói dịch vụ cao cấp).
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="contact-center">
+            <h2>TRUNG TÂM TIẾP NHẬN BẢO HÀNH</h2>
+            <div class="contact-details">
+              <p>
+                <strong>Địa chỉ:</strong> Số 2, Đường Võ Oanh (D3 cũ), Phường
+                25, Quận Bình Thạnh, TP.HCM
+              </p>
+              <p><strong>Hotline kỹ thuật:</strong> 0947.236.123</p>
+              <p>
+                <strong>Thời gian tiếp nhận:</strong> 09h00 – 17h30 (Từ Thứ 2
+                đến Thứ 7)
+              </p>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer class="main-footer">
+      <div class="container footer-grid">
+        <div class="footer-col">
+          <h3>Về Nexa Tech</h3>
+          <ul class="hover-col">
+            <li><a href="./Gioithieu.html">Giới thiệu</a></li>
+            <li><a href="./Tuyendung.html">Tuyển dụng</a></li>
+            <li><a href="./Lienhe.html">Liên hệ</a></li>
+          </ul>
+          <div class="social-links">
+            <div class="social-wrapper">
+              <p>HÃY KẾT NỐI VỚI CHÚNG TÔI</p>
+              <div class="icons">
+                <a href=""
+                  ><i class="fab fa-facebook-f" style="color: blue"></i
+                ></a>
+                <a href=""
+                  ><i class="fab fa-tiktok" style="color: black"></i
+                ></a>
+                <a href=""><i class="fab fa-youtube" style="color: red"></i></a>
+                <a href=""><i class="fas fa-users" style="color: green"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Chính sách</h3>
+          <ul class="hover-col">
+            <li style="color: #0076df">
+              <a href="./Chinhsachbaohanh.html">Chính sách bảo hành</a>
+            </li>
+            <li><a href="./Chinhsachgiaohang.html">Chính sách giao hàng</a></li>
+            <li><a href="./Chinhsachbaomat.html">Chính sách bảo mật</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Thông tin</h3>
+          <ul class="hover-col">
+            <li><a href="./Showroom.html">Hệ thống cửa hàng</a></li>
+            <li><a href="">Hướng dẫn mua hàng</a></li>
+            <li><a href="">Hướng dẫn thanh toán</a></li>
+            <li><a href="">Hướng dẫn trả góp</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Tổng đài hỗ trợ</h3>
+          <ul class="contact-list">
+            <li>Mua hàng: <span class="blue-text">1900.0000</span></li>
+            <li>Bảo hành: <span class="blue-text">1900.0001</span></li>
+            <li>Khiếu nại: <span class="blue-text">1900.0002</span></li>
+            <li>Email: <span class="blue-text">hihi123@ut.edu.vn</span></li>
+          </ul>
+          <div class="partner-logo">
+            <img src="../assets/img/GHN.png" alt="Giao Hàng Nhanh" />
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="../scripts/scripts.js"></script>
+    <script src="../scripts/sidebar.js"></script>
+    <script src="../scripts/CheckLogin.js"></script>
+  </body>
+</html>

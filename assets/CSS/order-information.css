@@ -1,0 +1,105 @@
+/* 1. LAYOUT CHUNG */
+.order-flow-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 2. STEPPER HEADER */
+.stepper-header {
+    display: flex;
+    align-items: center;
+    background: #fff0f0;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+.order-product-img { width: 140px; border-radius: 20px; }
+.steps { display: flex; flex: 1; justify-content: space-around; text-align: center; }
+.step-item { color: #999; font-size: 13px; font-weight: bold; }
+.step-item i {
+    display: block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    background: #ccc;
+    color: #fff;
+    border-radius: 50%;
+    margin: 0 auto 5px;
+    font-size: 16px;
+}
+.step-item.active { color: #000; }
+.step-item.active i { background: #ff0000; }
+
+/* 3. FORM NHẬP LIỆU */
+.form-section { display: none; }
+.form-section.active { display: block; }
+.form-section h3 { font-size: 15px; margin: 20px 0 10px; }
+
+.input-group-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+.input-group-row input, select.form-control {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    outline: none;
+    background: #fff;
+}
+.address-detail { background: #f1f1f1; padding: 15px; border-radius: 5px; }
+.address-detail input { width: 100%; background: transparent; border: none; outline: none; box-sizing: border-box; }
+
+/* 4. THANH TOÁN & TỔNG KẾT */
+.payment-method, .success-msg { text-align: center; padding: 30px 0; }
+.order-summary {
+    border: 1px solid #eee;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 400px;
+    text-align: left;
+    border-radius: 10px;
+    background: #fafafa;
+}
+.summary-item { display: flex; gap: 15px; align-items: center; }
+.summary-info p { margin: 5px 0; font-size: 14px; }
+.price-red { color: #ff0000; font-weight: bold; }
+
+/* 5. NÚT BẤM */
+.order-footer-btns { display: flex; justify-content: space-between; margin-top: 30px; }
+.btn-order {
+    padding: 12px 35px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+.btn-prev, .btn-next { background: #ff0000; }
+
+.finish-state { justify-content: center !important; width: 100%; }
+.btn-finish {
+    background: linear-gradient(45deg, #ff0000, #cc0000) !important;
+    padding: 15px 60px !important;
+    font-size: 18px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+    border-radius: 30px !important;
+}
+.btn-finish:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4); }
+
+/* 6. RESPONSIVE */
+@media (max-width: 600px) {
+    .stepper-header { flex-direction: column; text-align: center; padding: 10px; }
+    .steps { width: 100%; margin-top: 15px; }
+    .step-item { font-size: 11px; }
+    .step-item i { width: 30px; height: 30px; line-height: 30px; font-size: 14px; }
+    .top-banner-img { width: 100%; height: auto; }
+    .input-group-row input { min-width: 100%; }
+}
