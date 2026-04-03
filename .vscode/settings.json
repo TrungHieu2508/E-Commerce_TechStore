@@ -1,3 +1,4 @@
 {
-  "livePreview.defaultPreviewPath": "/pages/CPU.html"
+  "livePreview.defaultPreviewPath": "/pages/CPU.html",
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }

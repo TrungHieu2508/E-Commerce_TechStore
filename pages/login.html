@@ -196,7 +196,7 @@
         >
       </footer>
     </div>
-
+    <script src="../scripts/api-config.js"></script>
     <script>
       let isAdminView = false;
 
@@ -247,7 +247,11 @@
           const required_role = isAdminView ? "admin" : "user";
 
           try {
-            const res = await fetch("http://127.0.0.1:5000/login", {
+            const loginUrl =
+              typeof window.apiUrl === "function"
+                ? window.apiUrl("/login")
+                : "/login";
+            const res = await fetch(loginUrl, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ username, password, required_role }),
@@ -260,7 +264,7 @@
               localStorage.setItem("username", data.username);
               alert("Đăng nhập thành công!");
               window.location.href =
-                data.role === "admin" ? "admin.html" : "index.html";
+                data.role === "admin" ? "/admin.html" : "/index.html";
             } else {
               alert(data.msg);
             }

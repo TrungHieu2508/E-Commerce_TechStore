@@ -1,0 +1,32 @@
+# Python bytecode / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Test / tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Local DB files
+instance/*.sqlite3
+nextech.sqlite3
+
+# Generated DEV email artifacts
+instance/emails/*.eml
+
+# Environment files (never commit secrets)
+.env
+.env.*
+backend/.env
+.flaskenv

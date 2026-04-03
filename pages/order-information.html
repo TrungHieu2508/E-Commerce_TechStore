@@ -76,7 +76,7 @@
             </div>
           </a>
 
-          <div id="user-account" class="header-tools">
+          <div id="user-account" class="user-account">
             <a href="./login.html" class="login-btn" id="user-display">
               <i class="fas fa-user-circle"></i>
               <span>Đăng nhập</span>
@@ -250,6 +250,13 @@
                     placeholder="Số điện thoại"
                   />
                 </div>
+                <div class="input-group-row">
+                  <input
+                    type="email"
+                    id="customerEmail"
+                    placeholder="Email (tuỳ chọn, để nhận xác nhận đơn hàng)"
+                  />
+                </div>
                 <h3>Địa chỉ giao hàng</h3>
                 <div class="input-group-row">
                   <select id="province" class="form-control">
@@ -281,10 +288,49 @@
                     Phương thức vận chuyển:
                     <strong>Giao hàng nhanh (Miễn phí)</strong>
                   </p>
-                  <p>
+                  <p style="margin-bottom: 12px">
                     Phương thức thanh toán:
-                    <strong>Thanh toán khi nhận hàng (COD)</strong>
+                    <strong id="paymentMethodLabel"
+                      >Thanh toán khi nhận hàng (COD)</strong
+                    >
                   </p>
+
+                  <div
+                    class="input-group-row"
+                    style="justify-content: center; margin-top: 10px"
+                  >
+                    <select
+                      id="paymentMethod"
+                      class="form-control"
+                      style="max-width: 420px"
+                    >
+                      <option value="cod">
+                        Thanh toán khi nhận hàng (COD)
+                      </option>
+                      <option value="momo">Ví MoMo</option>
+                      <option value="bank">Chuyển khoản ngân hàng</option>
+                      <option value="napas">Thẻ ATM/Napas</option>
+                    </select>
+                  </div>
+
+                  <div
+                    id="paymentHint"
+                    style="margin-top: 8px; font-size: 13px; color: #666"
+                  ></div>
+
+                  <div
+                    id="walletPaidArea"
+                    style="margin-top: 15px; display: none"
+                  >
+                    <button
+                      type="button"
+                      class="btn-order btn-next"
+                      id="markPaidBtn"
+                      style="width: 220px"
+                    >
+                      Đã thanh toán
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -384,9 +430,9 @@
       </div>
     </footer>
 
+    <script src="../scripts/api-config.js"></script>
     <script src="../scripts/scripts.js"></script>
     <script src="../scripts/sidebar.js"></script>
-    <script src="../scripts/product-detail.js"></script>
     <script src="../scripts/order-information.js"></script>
     <script src="../scripts/CheckLogin.js"></script>
   </body>

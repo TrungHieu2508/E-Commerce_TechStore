@@ -9,7 +9,7 @@ const productId = parseInt(params.get("id"));
 // 2. Hàm lấy dữ liệu và hiển thị chi tiết
 async function loadProductDetail() {
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/public/products");
+    const response = await fetch(window.apiUrl("/api/public/products"));
     const allProductsFromDB = await response.json();
 
     let product = null;
@@ -40,7 +40,7 @@ async function loadProductDetail() {
 // 3. Hàm hiển thị bình luận từ Database
 async function loadReviews(pid) {
   try {
-    const res = await fetch(`http://127.0.0.1:5000/api/reviews/${pid}`);
+    const res = await fetch(window.apiUrl(`/api/reviews/${pid}`));
     const reviews = await res.json();
     const list = document.getElementById("review-list");
 
@@ -111,13 +111,19 @@ function renderProductUI(product, categoryKey) {
                 </div>
 
                 <div class="buy-group">
+                  <div class="buy-row">
+                    <button class="btn-add-cart" id="btnAddToCart">
+                      THÊM VÀO GIỎ
+                      <small>Xem giỏ hàng trước khi thanh toán</small>
+                    </button>
                     <button class="btn-now" id="btnBuyNow">
-                        MUA NGAY
-                        <small>Giao tận nơi hoặc nhận tại cửa hàng</small>
+                      MUA NGAY
+                      <small>Giao tận nơi hoặc nhận tại cửa hàng</small>
                     </button>
-                    <button class="btn-advise" id="btnAdvise">
-                        <i class="fas fa-comment-dots"></i> TƯ VẤN NGAY
-                    </button>
+                  </div>
+                  <button class="btn-advise" id="btnAdvise">
+                    <i class="fas fa-comment-dots"></i> TƯ VẤN NGAY
+                  </button>
                 </div>
 
                 <div class="promo-box">
@@ -167,6 +173,25 @@ function generateStaticStars(rating) {
 
 // 5. Hàm xử lý các nút bấm
 function initButtons(product) {
+  const btnAddToCart = document.getElementById("btnAddToCart");
+  if (btnAddToCart) {
+    btnAddToCart.onclick = async () => {
+      try {
+        if (typeof addToCartBE2 !== "function") {
+          alert("Không thể thêm vào giỏ: thiếu hàm giỏ hàng!");
+          return;
+        }
+        const result = await addToCartBE2(product.id, 1);
+        if (result && result.ok) {
+          window.location.href = "order-information.html?cart=1";
+        }
+      } catch (err) {
+        console.error("Add to cart failed:", err);
+        alert("Không thể kết nối đến server!");
+      }
+    };
+  }
+
   const btnBuyNow = document.getElementById("btnBuyNow");
   if (btnBuyNow) {
     btnBuyNow.onclick = () =>
@@ -209,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch("http://127.0.0.1:5000/api/reviews/add", {
+        const res = await fetch(window.apiUrl("/api/reviews/add"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

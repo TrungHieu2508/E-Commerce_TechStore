@@ -9,7 +9,7 @@ let currentProducts = [];
 async function fetchDataFromDB() {
   try {
     // Lấy danh sách sản phẩm
-    const productRes = await fetch("http://127.0.0.1:5000/api/public/products");
+    const productRes = await fetch(window.apiUrl("/api/public/products"));
     if (!productRes.ok) throw new Error("Không thể tải dữ liệu sản phẩm");
     allProducts = await productRes.json();
 
@@ -54,7 +54,7 @@ async function fetchDataFromDB() {
 // 2. Hàm nạp Banner từ Database (Sửa lỗi không lưu/hiển thị banner)
 async function fetchHomeBanners() {
   try {
-    const res = await fetch("http://127.0.0.1:5000/api/public/banners");
+    const res = await fetch(window.apiUrl("/api/public/banners"));
     const banners = await res.json();
 
     // Định nghĩa bảng tra cứu (Key là position trong DB, Value là tên file ảnh gốc)
@@ -183,7 +183,10 @@ function renderProducts(data) {
                 <div class="p-old">${p.oldPrice > 0 ? p.oldPrice.toLocaleString() + "đ" : "&nbsp;"}</div>
                 <div style="display:flex; justify-content:space-between; align-items:center">
                     <span class="p-price">${p.price.toLocaleString()}đ</span>
-                    <span class="btn-buy">Mua</span>
+              <span style="display:flex; flex-direction:row; align-items:center; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
+                <span class="btn-buy btn-add-cart" data-product-id="${p.id}" role="button">Thêm vào giỏ</span>
+                <span class="btn-buy btn-buy-now" data-product-id="${p.id}" role="button">Mua ngay</span>
+              </span>
                 </div>
             </div>
         `;
@@ -191,9 +194,103 @@ function renderProducts(data) {
     .join("");
 }
 
+async function addToCartBE2(productId, quantity) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Bạn cần đăng nhập để thêm vào giỏ hàng!");
+    window.location.href = "login.html";
+    return { ok: false };
+  }
+
+  const res = await fetch(window.apiUrl("/api/cart"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ product_id: productId, quantity: quantity || 1 }),
+  });
+
+  let data = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
+    alert("Lỗi: " + ((data && data.msg) || "Không thể thêm vào giỏ"));
+    return { ok: false, data };
+  }
+
+  return { ok: true, data };
+}
+
+function ensureCartLinkInHeader() {
+  const headerTools = document.querySelector("header .header-tools");
+  if (!headerTools) return;
+  if (document.getElementById("cart-tool")) return;
+
+  const cartLink = document.createElement("a");
+  cartLink.id = "cart-tool";
+  cartLink.href = "order-information.html?cart=1";
+  cartLink.className = "tool-item";
+  cartLink.innerHTML = `
+    <i class="fas fa-shopping-cart"></i>
+    <div class="text">
+      <span>Giỏ</span>
+      <strong>hàng</strong>
+    </div>
+  `;
+
+  const userAccount = document.getElementById("user-account");
+  if (userAccount && userAccount.parentElement === headerTools) {
+    headerTools.insertBefore(cartLink, userAccount);
+  } else {
+    headerTools.appendChild(cartLink);
+  }
+}
+
 // 5. Khởi chạy khi DOM đã load
 document.addEventListener("DOMContentLoaded", () => {
   fetchDataFromDB();
+  ensureCartLinkInHeader();
+
+  // BE2 Cart: click "Mua" to add to cart
+  const productContainer = document.getElementById("productContainer");
+  if (productContainer) {
+    productContainer.addEventListener(
+      "click",
+      async (e) => {
+        const addBtn = e.target.closest(".btn-add-cart");
+        const buyNowBtn = e.target.closest(".btn-buy-now");
+        if (!addBtn && !buyNowBtn) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const btn = addBtn || buyNowBtn;
+        const pid = parseInt(btn.getAttribute("data-product-id"), 10);
+        if (!pid) return;
+
+        try {
+          if (buyNowBtn) {
+            window.location.href = `order-information.html?id=${pid}`;
+            return;
+          }
+
+          const result = await addToCartBE2(pid, 1);
+          if (result.ok) {
+            window.location.href = "order-information.html?cart=1";
+          }
+        } catch (err) {
+          console.error("Add to cart failed:", err);
+          alert("Không thể kết nối đến server!");
+        }
+      },
+      true,
+    );
+  }
 
   // Logic Filter
   const filterBtn = document.getElementById("filterToggle");

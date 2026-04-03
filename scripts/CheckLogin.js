@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     userDisplay.innerHTML = `
             <i class="fas fa-user-circle"></i>
             <span>Chào, ${username}</span>
-            <button id="logout-btn" style="margin-left:10px; background:none; border:none; color:red; cursor:pointer; font-size:12px;">[Thoát]</button>
+            <button id="logout-btn" class="logout-btn">[Thoát]</button>
         `;
 
     document
