@@ -20,8 +20,6 @@ function getStatusText(status) {
 function getPaymentMethodText(method) {
   const m = String(method || "").toLowerCase();
   if (m === "momo") return "Ví MoMo";
-  if (m === "bank") return "Chuyển khoản ngân hàng";
-  if (m === "napas") return "Thẻ ATM/Napas";
   if (m === "cod") return "Thanh toán khi nhận hàng (COD)";
   if (m === "mock") return "Thanh toán (Mock)";
   return safeText(method);
@@ -33,7 +31,7 @@ function getPaymentStatusText(status) {
   if (s === "failed") return "Thất bại";
   if (s === "pending") return "Chờ thanh toán";
   if (s === "unpaid") return "Chưa thanh toán";
-  if (s === "pending_transfer") return "Chờ chuyển khoản";
+  if (s === "pending_transfer") return "Chờ thanh toán";
   return safeText(status);
 }
 
@@ -44,10 +42,9 @@ function getPaymentStatusTextByMethod(status, method) {
   // Preserve explicit failures if they exist.
   if (s === "failed") return "Thất bại";
 
-  // Per requirement: only COD is "Chờ thanh toán"; wallet/bank/ATM are "Đã thanh toán".
+  // Per requirement: only COD is "Chờ thanh toán"; MoMo is treated as "Đã thanh toán".
   if (m === "cod") return "Chờ thanh toán";
-  if (m === "momo" || m === "bank" || m === "napas" || m === "atm")
-    return "Đã thanh toán";
+  if (m === "momo") return "Đã thanh toán";
 
   return getPaymentStatusText(status);
 }

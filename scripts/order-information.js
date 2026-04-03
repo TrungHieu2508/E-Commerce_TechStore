@@ -350,14 +350,12 @@ function isValidEmail(email) {
 
 function isWalletPaymentMethod(method) {
   const m = String(method || "").toLowerCase();
-  return m === "momo" || m === "napas" || m === "bank";
+  return m === "momo";
 }
 
 function getPaymentMethodText(method) {
   const m = String(method || "").toLowerCase();
   if (m === "momo") return "Ví MoMo";
-  if (m === "bank") return "Chuyển khoản ngân hàng";
-  if (m === "napas") return "Thẻ ATM/Napas";
   return "Thanh toán khi nhận hàng (COD)";
 }
 

@@ -1310,7 +1310,7 @@ def create_order():
 
     payment_method = (data.get('payment_method') or data.get('provider') or 'cod')
     payment_method = str(payment_method or '').strip().lower()
-    if payment_method not in ('cod', 'momo', 'bank', 'napas'):
+    if payment_method not in ('cod', 'momo'):
         payment_method = 'cod'
 
     idem_key = ((data.get('idempotency_key') if isinstance(data, dict) else None) or request.headers.get('Idempotency-Key') or '').strip()
@@ -1560,8 +1560,11 @@ def get_order_detail(order_code):
     def _payment_payload(p: Payment):
         if not p:
             return None
+        provider = p.provider
+        if provider in ('bank', 'napas', 'atm'):
+            provider = 'momo'
         return {
-            "provider": p.provider,
+            "provider": provider,
             "status": p.status,
             "payment_ref": p.payment_ref,
             "amount": p.amount,
@@ -1573,7 +1576,9 @@ def get_order_detail(order_code):
         m = str(method or '').strip().lower()
         if not m:
             return None
-        if m not in ('cod', 'momo', 'bank', 'napas'):
+        if m in ('bank', 'napas', 'atm'):
+            m = 'momo'
+        if m not in ('cod', 'momo'):
             return None
 
         # Status hints for UI when there is no Payment row yet.
@@ -1581,7 +1586,7 @@ def get_order_detail(order_code):
             # Chờ thanh toán (COD: thanh toán khi nhận hàng)
             status = 'pending'
         else:
-            # Mô phỏng đã thanh toán ngay khi đặt hàng cho momo/bank/napas
+            # Mô phỏng đã thanh toán ngay khi đặt hàng cho momo
             status = 'success'
 
         return {
@@ -1594,6 +1599,8 @@ def get_order_detail(order_code):
         }
 
     payment_method = (order.payment_method or '').strip().lower() if hasattr(order, 'payment_method') else ''
+    if payment_method in ('bank', 'napas', 'atm'):
+        payment_method = 'momo'
     derived_initial = _initial_payment_from_order(payment_method) if not payments else None
 
     return jsonify({
