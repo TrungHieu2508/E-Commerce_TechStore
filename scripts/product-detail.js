@@ -1,169 +1,272 @@
-// 1. Lấy ID sản phẩm từ URL (ví dụ: product-detail.html?id=20)
+/**
+ * NEXTECH - PRODUCT-DETAIL.JS (FULL UPDATED & SYNCED)
+ */
+
+// 1. Lấy ID sản phẩm từ URL
 const params = new URLSearchParams(window.location.search);
-const id = parseInt(params.get('id'));
+const productId = parseInt(params.get("id"));
 
-// 2. Tìm sản phẩm trong kho dữ liệu allProducts (từ file scripts.js)
-let product = null;
-let categoryKey = "";
+// 2. Hàm lấy dữ liệu và hiển thị chi tiết
+async function loadProductDetail() {
+  try {
+    const response = await fetch(window.apiUrl("/api/public/products"));
+    const allProductsFromDB = await response.json();
 
-for (let key in allProducts) {
-    let found = allProducts[key].find(item => item.id === id);
-    if (found) { 
-        product = found; 
-        categoryKey = key; 
-        break; 
+    let product = null;
+    let categoryKey = "";
+
+    for (let key in allProductsFromDB) {
+      let found = allProductsFromDB[key].find((item) => item.id === productId);
+      if (found) {
+        product = found;
+        categoryKey = key;
+        break;
+      }
     }
+
+    if (product) {
+      renderProductUI(product, categoryKey);
+      // Tải bình luận ngay khi sản phẩm hiển thị thành công
+      loadReviews(product.id);
+    } else {
+      renderNotFound();
+    }
+  } catch (error) {
+    console.error("Lỗi khi tải chi tiết sản phẩm:", error);
+    renderNotFound();
+  }
 }
 
-// 3. Nếu tìm thấy sản phẩm, tiến hành đổ dữ liệu
-if (product) {
-    // Đổ Breadcrumb
-    document.getElementById('dynamic-breadcrumb').innerHTML = `
+// 3. Hàm hiển thị bình luận từ Database
+async function loadReviews(pid) {
+  try {
+    const res = await fetch(window.apiUrl(`/api/reviews/${pid}`));
+    const reviews = await res.json();
+    const list = document.getElementById("review-list");
+
+    if (!list) return;
+
+    if (reviews.length === 0) {
+      list.innerHTML = `<p style="color:#999; text-align:center; padding: 20px;">Sản phẩm này chưa có đánh giá nào. Hãy là người đầu tiên!</p>`;
+      return;
+    }
+
+    list.innerHTML = reviews
+      .map((r) => {
+        let starHtml = "";
+        for (let i = 1; i <= 5; i++) {
+          starHtml += `<i class="fas fa-star" style="color: ${i <= r.rating ? "#ffc107" : "#ccc"}"></i>`;
+        }
+        return `
+            <div class="review-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                <div class="author" style="font-weight:bold; color:#1a234a">
+                    ${r.username} <span style="font-weight: normal; font-size: 12px; color: #999;">- ${r.date}</span>
+                </div>
+                <div class="stars" style="margin: 5px 0;">${starHtml}</div>
+                <div class="content" style="color:#444; line-height:1.5">${r.content}</div>
+            </div>`;
+      })
+      .join("");
+  } catch (e) {
+    console.error("Lỗi tải bình luận:", e);
+  }
+}
+
+// 4. Hàm đổ dữ liệu sản phẩm vào HTML
+function renderProductUI(product, categoryKey) {
+  const breadcrumb = document.getElementById("dynamic-breadcrumb");
+  if (breadcrumb) {
+    breadcrumb.innerHTML = `
         <a href="index.html"><i class="fas fa-home"></i> Trang chủ</a> > 
-        <a href="#" onclick="history.back(); return false;"> ${categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1) } > </a>
+        <a href="#" onclick="history.back(); return false;"> ${categoryKey} </a> >
         <strong>${product.name}</strong>
     `;
-    
-    // Đổ Nội dung chi tiết
-    document.getElementById('product-content').innerHTML = `
+  }
+
+  const contentArea = document.getElementById("product-content");
+  if (contentArea) {
+    contentArea.innerHTML = `
         <div class="detail-grid">
             <div class="left">
-                <img src="${product.img}" class="product-main-img" alt="${product.name}">
-                
-                <div class="product-description-content">
-                    ${product.description || '<p>Nội dung đang được cập nhật cho sản phẩm này...</p>'}
+                <div class="main-img-container" style="background:#fff; padding:20px; border-radius:8px; text-align:center">
+                    <img src="${product.img}" class="product-main-img" alt="${product.name}" style="max-height:400px; object-fit:contain">
+                </div>
+                <div class="product-description-content" style="margin-top:30px; background:#fff; padding:20px; border-radius:8px">
+                    <h3 style="margin-bottom:15px; border-left:4px solid #d70018; padding-left:10px">Mô tả sản phẩm</h3>
+                    ${product.description || "<p>Nội dung đang được cập nhật...</p>"}
                 </div>
             </div>
 
             <div class="right">
-                <h1>${product.name}</h1>
-                <div style="margin: 15px 0; display: flex; align-items: baseline;">
-                    <span class="price-big">${product.price.toLocaleString()}đ</span>
-                    ${product.oldPrice > 0 ? `<span class="old-price-detail">${product.oldPrice.toLocaleString()}đ</span>` : ''}
+                <h1 style="font-size:24px; color:#1a234a">${product.name}</h1>
+                
+                <div class="rating-summary" style="margin:10px 0; color:#ffbe00">
+                    ${generateStaticStars(product.rating)}
+                    <span style="color:#666; font-size:14px"> (${product.review_count || 0} đánh giá)</span>
+                </div>
+
+                <div style="margin: 15px 0; display: flex; align-items: baseline; gap:15px">
+                    <span class="price-big" style="color:#d70018; font-size:28px; font-weight:bold">${product.price.toLocaleString()}đ</span>
+                    ${product.oldPrice > 0 ? `<span class="old-price-detail" style="text-decoration:line-through; color:#999">${product.oldPrice.toLocaleString()}đ</span>` : ""}
                 </div>
 
                 <div class="buy-group">
+                  <div class="buy-row">
+                    <button class="btn-add-cart" id="btnAddToCart">
+                      THÊM VÀO GIỎ
+                      <small>Xem giỏ hàng trước khi thanh toán</small>
+                    </button>
                     <button class="btn-now" id="btnBuyNow">
-                        MUA NGAY
-                        <small>Giao tận nơi hoặc nhận tại cửa hàng</small>
+                      MUA NGAY
+                      <small>Giao tận nơi hoặc nhận tại cửa hàng</small>
                     </button>
-                    
-                    <button class="btn-advise" id="btnAdvise">
-                        <i class="fas fa-comment-dots"></i> TƯ VẤN NGAY
-                    </button>
+                  </div>
+                  <button class="btn-advise" id="btnAdvise">
+                    <i class="fas fa-comment-dots"></i> TƯ VẤN NGAY
+                  </button>
                 </div>
-
-                <ul style="font-size: 14px; color: #444;margin-bottom: 20px">
-                    <li><i class="fas fa-check" style="color: #28a745; margin-right: 8px;"></i> Bảo hành chính hãng 12 tháng.</li>
-                    <li><i class="fas fa-check" style="color: #28a745; margin-right: 8px;"></i> Hỗ trợ đổi mới trong 7 ngày.</li>
-                    <li><i class="fas fa-check" style="color: #28a745; margin-right: 8px;"></i> Miễn phí giao hàng toàn quốc.</li>
-                </ul>
 
                 <div class="promo-box">
-                    <div class="promo-header">
-                        <i class="fas fa-gift" style="color: #d70018;"></i> Khuyến mãi
-                    </div>
+                    <div class="promo-header"><i class="fas fa-gift"></i> Khuyến mãi</div>
                     <div class="promo-body">
-                        <p><i class="fas fa-check-circle" style="color: #28a745;"></i> ${product.promo || 'Giảm ngay 100.000đ khi mua tại NexTech.'}</p>
-                        <p style="color: #007bff; cursor: pointer;">(Xem thêm)</p>
+                        <p><i class="fas fa-check-circle"></i> Giảm ngay 100.000đ khi thanh toán qua chuyển khoản.</p>
+                        <p><i class="fas fa-check-circle"></i> Miễn phí vận chuyển bán kính 5km.</p>
                     </div>
                 </div>
 
-                <div class="specs-detail-title">ĐIỂM NỔI BẬT</div>
+                <div class="specs-detail-title">THÔNG SỐ KỸ THUẬT</div>
                 <table class="specs-table">
-                    ${Object.entries(product.specs).map(([k, v]) => `
+                    ${Object.entries(product.specs || {})
+                      .map(
+                        ([k, v]) => `
                         <tr>
-                            <td>${k}</td>
+                            <td style="background:#f9f9f9; font-weight:600; width:35%">${k}</td>
                             <td>${v}</td>
                         </tr>
-                    `).join('')}
+                    `,
+                      )
+                      .join("")}
                 </table>
             </div>
         </div>
     `;
+  }
 
+  const ratingTitle = document.getElementById("rating-title");
+  if (ratingTitle)
+    ratingTitle.innerText = `Đánh giá & Nhận xét: ${product.name}`;
 
-        // 1. Xử lý nút Mua Ngay
-        const btnBuyNow = document.getElementById('btnBuyNow');
-        if (btnBuyNow) {
-            btnBuyNow.onclick = function() {
-                // Chuyển hướng sang trang order-Information.html và đính kèm ID sản phẩm
-                window.location.href = `order-information.html?id=${product.id}`;
-            };
+  initButtons(product);
+}
+
+// Hàm hỗ trợ vẽ sao dựa trên rating trung bình
+function generateStaticStars(rating) {
+  let html = "";
+  const r = rating || 0;
+  for (let i = 1; i <= 5; i++) {
+    // Nếu r = 0 thì tất cả là màu xám (#ccc), nếu r > 0 thì tô vàng (#ffbe00)
+    const starColor = r > 0 && i <= Math.round(r) ? "#ffbe00" : "#ccc";
+    html += `<i class="fas fa-star" style="color: ${starColor}"></i>`;
+  }
+  return html;
+}
+
+// 5. Hàm xử lý các nút bấm
+function initButtons(product) {
+  const btnAddToCart = document.getElementById("btnAddToCart");
+  if (btnAddToCart) {
+    btnAddToCart.onclick = async () => {
+      try {
+        if (typeof addToCartBE2 !== "function") {
+          alert("Không thể thêm vào giỏ: thiếu hàm giỏ hàng!");
+          return;
         }
-
-        // 2. Xử lý nút Tư Vấn (Gắn số điện thoại bạn yêu cầu)
-        const btnAdvise = document.getElementById('btnAdvise');
-        if (btnAdvise) {
-            btnAdvise.onclick = function() {
-                // Lệnh tel: sẽ tự động mở ứng dụng cuộc gọi trên điện thoại
-                window.location.href = 'tel:0938943062';
-            };
+        const result = await addToCartBE2(product.id, 1);
+        if (result && result.ok) {
+          window.location.href = "order-information.html?cart=1";
         }
+      } catch (err) {
+        console.error("Add to cart failed:", err);
+        alert("Không thể kết nối đến server!");
+      }
+    };
+  }
 
+  const btnBuyNow = document.getElementById("btnBuyNow");
+  if (btnBuyNow) {
+    btnBuyNow.onclick = () =>
+      (window.location.href = `order-information.html?id=${product.id}`);
+  }
 
+  const btnAdvise = document.getElementById("btnAdvise");
+  if (btnAdvise) {
+    btnAdvise.onclick = () => (window.location.href = "tel:19001234");
+  }
+}
 
-    // Cập nhật tiêu đề trang và tiêu đề đánh giá
-    document.getElementById('rating-title').innerText = `Đánh giá & Nhận xét : ${product.name}`;
-    document.addEventListener('DOMContentLoaded', function() {
-        const submitBtn = document.getElementById('submitReview');
-        
-        if (submitBtn) {
-            submitBtn.addEventListener('click', function() {
-                const content = document.getElementById('reviewText').value;
-                const name = document.getElementById('reviewerName').value;
-                const starInput = document.querySelector('input[name="stars"]:checked');
-                
-                // Kiểm tra dữ liệu
-                if (!starInput) {
-                    alert("Vui lòng chọn số sao đánh giá!");
-                    return;
-                }
-                if (!name || !content) {
-                    alert("Vui lòng nhập đầy đủ họ tên và nội dung đánh giá!");
-                    return;
-                }
+// 6. Xử lý Gửi Đánh Giá (Lưu Database)
+document.addEventListener("DOMContentLoaded", () => {
+  loadProductDetail();
 
-                // Tạo cấu trúc đánh giá mới
-                const ratingValue = starInput.value;
-                const reviewList = document.getElementById('review-list');
-                
-                const newReview = document.createElement('div');
-                newReview.className = 'review-item';
-                
-                // Tạo chuỗi sao vàng dựa trên số lượng chọn
-                let starHtml = '';
-                for(let i=0; i<5; i++) {
-                    starHtml += `<i class="fas fa-star" style="color: ${i < ratingValue ? '#ffc107' : '#ccc'}"></i>`;
-                }
+  const submitBtn = document.getElementById("submitReview");
+  if (submitBtn) {
+    submitBtn.onclick = async function () {
+      const token = localStorage.getItem("token");
 
-                newReview.innerHTML = `
-                    <div class="author">${name} <span style="font-weight: normal; font-size: 12px; color: #999;">- Vừa xong</span></div>
-                    <div class="stars">${starHtml}</div>
-                    <div class="content">${content}</div>
-                `;
+      if (!token) {
+        alert("Bạn cần đăng nhập để gửi đánh giá!");
+        window.location.href = "login.html";
+        return;
+      }
 
-                // Thêm vào đầu danh sách
-                reviewList.prepend(newReview);
+      const content = document.getElementById("reviewText").value;
+      const starInput = document.querySelector('input[name="stars"]:checked');
 
-                // Reset form
-                document.getElementById('reviewText').value = '';
-                document.getElementById('reviewerName').value = '';
-                document.getElementById('reviewerEmail').value = '';
-                starInput.checked = false;
+      if (!starInput || !content.trim()) {
+        alert("Vui lòng chọn số sao và nhập nội dung cảm nhận!");
+        return;
+      }
 
-                alert("Cảm ơn bạn đã gửi đánh giá! Đánh giá của bạn đang được chờ duyệt.");
-            });
+      const body = {
+        product_id: productId,
+        rating: parseInt(starInput.value),
+        content: content,
+      };
+
+      try {
+        const res = await fetch(window.apiUrl("/api/reviews/add"), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (res.ok) {
+          alert("Gửi đánh giá thành công! Cảm ơn bạn.");
+          location.reload();
+        } else {
+          const errData = await res.json();
+          alert("Lỗi: " + (errData.msg || "Không thể gửi đánh giá"));
         }
-    });
+      } catch (error) {
+        console.error("Lỗi API:", error);
+        alert("Không thể kết nối đến server!");
+      }
+    };
+  }
+});
 
-} else {
-    // Nếu không tìm thấy sản phẩm
-    document.getElementById('product-content').innerHTML = `
-        <div style="text-align: center; padding: 50px; background: #fff; border-radius: 8px;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></i>
-            <h2>Rất tiếc, sản phẩm không tồn tại hoặc đã hết hàng!</h2>
-            <a href="index.html" style="color: #d70018; text-decoration: none; font-weight: bold;">Quay lại trang chủ</a>
+function renderNotFound() {
+  const contentArea = document.getElementById("product-content");
+  if (contentArea) {
+    contentArea.innerHTML = `
+        <div style="text-align: center; padding: 100px 0;">
+            <i class="fas fa-search" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+            <h2>Sản phẩm không tồn tại hoặc đã bị gỡ bỏ!</h2>
+            <a href="index.html" style="color:#007bff; font-weight:600">Quay về trang chủ</a>
         </div>
     `;
+  }
 }

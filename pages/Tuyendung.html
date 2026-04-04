@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Liên hệ - NexTech</title>
+    <title>Tuyển dụng - NexTech</title>
     <link rel="stylesheet" href="../assets/CSS/styles.css" />
     <link rel="stylesheet" href="../assets/CSS/product-detail.css" />
     <link
@@ -64,13 +64,15 @@
         max-height: 90px;
       }
 
+      /* Search Bar */
       .search-bar {
         display: flex;
         flex-grow: 0.6;
         background: white;
         border-radius: 5px;
-        overflow: hidden;
         margin: 0 20px;
+        position: relative;
+        overflow: visible; /* 🔥 FIX */
       }
 
       .search-bar input {
@@ -114,8 +116,7 @@
         background: white;
         border-bottom: 1px solid #ddd;
         padding: 12px 0;
-        z-index: 900;
-        position: sticky;
+        z-index: 1;
         top: 100px;
       }
 
@@ -133,121 +134,115 @@
         color: #444;
       }
 
-      /* --- LAYOUT LIÊN HỆ --- */
-      .contact-page {
+      /* --- LAYOUT TUYỂN DỤNG --- */
+      .careers-page {
+        background-color: #f8f9fa;
         padding: 60px 0;
-        background-color: #f9f9f9;
       }
 
-      .contact-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.5fr;
-        gap: 40px;
-        align-items: start;
-        margin-bottom: 40px;
+      .careers-hero {
+        text-align: center;
+        margin-bottom: 50px;
       }
 
-      .contact-info-panel {
-        background: #1a234a;
-        color: #fff;
-        padding: 40px;
-        border-radius: 8px;
-      }
-
-      .contact-info-panel h2 {
-        font-size: 24px;
-        margin-bottom: 30px;
-        border-bottom: 2px solid #0076df;
-        padding-bottom: 10px;
-      }
-
-      .info-item {
-        margin-bottom: 25px;
-      }
-
-      .info-item label {
-        display: block;
+      .careers-hero h1 {
+        font-size: 32px;
+        color: #1a234a;
+        margin-bottom: 15px;
         text-transform: uppercase;
-        font-size: 12px;
-        color: #0076df;
-        font-weight: bold;
-        margin-bottom: 5px;
       }
 
-      .info-item p {
-        font-size: 16px;
-        line-height: 1.5;
+      .careers-hero p {
+        color: #666;
+        font-size: 18px;
+        max-width: 700px;
+        margin: 0 auto;
       }
 
-      .contact-form-panel {
+      .job-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 25px;
+      }
+
+      .job-card {
         background: #fff;
-        padding: 40px;
+        padding: 30px;
         border-radius: 8px;
         border: 1px solid #eee;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
       }
 
-      .contact-form-panel h2 {
-        font-size: 24px;
-        color: #1a234a;
-        margin-bottom: 30px;
-      }
-
-      .form-group {
-        margin-bottom: 20px;
-      }
-
-      .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #444;
-      }
-
-      .form-group input,
-      .form-group textarea {
-        width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        outline: none;
-        transition: border-color 0.3s;
-      }
-
-      .form-group input:focus,
-      .form-group textarea:focus {
+      .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         border-color: #0076df;
       }
 
-      .submit-contact {
-        background: #0076df;
-        color: #fff;
-        border: none;
-        padding: 15px 30px;
-        font-size: 16px;
+      .job-tag {
+        display: inline-block;
+        background: #eef6ff;
+        color: red;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
         font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .job-title {
+        font-size: 20px;
+        color: #1a234a;
+        margin-bottom: 10px;
+        display: block;
+        font-weight: 700;
+      }
+
+      .job-info {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+      }
+
+      .job-desc {
+        font-size: 15px;
+        color: #555;
+        margin-bottom: 25px;
+        line-height: 1.6;
+      }
+
+      .apply-btn {
+        display: inline-block;
+        background: #1a234a;
+        color: #fff;
+        padding: 10px 25px;
         border-radius: 4px;
-        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
         transition: background 0.3s;
       }
 
-      .submit-contact:hover {
-        background: #005bb5;
+      .apply-btn:hover {
+        background: #0076df;
       }
 
-      /* Fix Bản đồ */
-      .map-container {
-        width: 100%;
-        height: 450px;
+      .hr-contact {
+        margin-top: 60px;
+        background: #fff;
+        padding: 40px;
         border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid #ddd;
-        background: #eee;
+        text-align: center;
+        border-top: 4px solid #0076df;
       }
 
-      .map-container iframe {
-        width: 100%;
-        height: 100%;
-        border: 0;
+      .hr-contact h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
       }
 
       /* --- Footer --- */
@@ -303,16 +298,19 @@
         .sep {
           display: none;
         }
-        .contact-grid {
-          grid-template-columns: 1fr;
-        }
         .footer-grid {
           grid-template-columns: repeat(2, 1fr);
+        }
+        .main-header {
+          height: auto;
+          padding: 15px 0;
         }
       }
     </style>
   </head>
   <body>
+    <div class="sidebar-overlay"></div>
+    <!-- Header promotion: chỉ hiển thị dòng chữ "Mua PC tặng màn 240Hz" -->
     <div class="header-promotion">
       <button class="promo-button">MUA LAPTOP</button>
       <span class="promo-text"
@@ -331,7 +329,9 @@
             />
           </a>
         </div>
+
         <div class="category-btn"><i class="fas fa-bars"></i> Danh mục</div>
+
         <div class="search-bar">
           <input
             type="text"
@@ -342,26 +342,36 @@
           <button type="button" id="searchBtn">
             <i class="fas fa-search"></i>
           </button>
+
+          <!-- QUAN TRỌNG -->
+          <div id="searchDropdown" class="search-dropdown"></div>
         </div>
+
         <div class="header-tools">
           <a href="tel:19001234" class="tool-item">
             <i class="fas fa-phone-alt"></i>
             <div class="text">
-              <span>Hotline</span><strong>1900.1234</strong>
+              <span>Hotline</span>
+              <strong>1900.1234</strong>
             </div>
           </a>
+
           <a href="./Showroom.html" class="tool-item">
             <i class="fas fa-map-marker-alt"></i>
             <div class="text">
-              <span>Hệ thống</span><strong>cửa hàng</strong>
+              <span>Hệ thống</span>
+              <strong>cửa hàng</strong>
             </div>
           </a>
+
           <a href="./Tra_cuu.html" class="tool-item">
             <i class="fas fa-box"></i>
             <div class="text">
-              <span>Tra cứu</span><strong>đơn hàng</strong>
+              <span>Tra cứu</span>
+              <strong>đơn hàng</strong>
             </div>
           </a>
+
           <div id="user-account" class="user-account">
             <a href="./login.html" class="login-btn" id="user-display">
               <i class="fas fa-user-circle"></i>
@@ -375,7 +385,7 @@
     <nav class="sub-nav">
       <div class="container sub-nav-flex">
         <a href="./Laptop.html" class="nav-link"
-          ><i class="fa-solid fa-tags"></i> Mua PC tặng màn 240Hz</a
+          ><i class="fa-solid fa-tags"></i> Mua Laptop tặng màn 240Hz</a
         >
         <span class="sep"></span>
         <a href="./Hotdeal.html" class="nav-link"
@@ -400,59 +410,157 @@
       </div>
     </nav>
 
-    <main class="contact-page">
+    <!-- Quang cao -->
+
+    <div class="main-container-top">
+      <!-- Sidebar với banner dưới -->
+      <div class="sidebar-left">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <ul>
+            <li>
+              <i class="fa-solid fa-mobile-screen-button"></i>
+              <span>Điện thoại</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Iphone.html">iPhone</a></li>
+                  <li><a href="../pages/SamSung.html">Samsung</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li>
+              <i class="fa-solid fa-laptop-code"></i>
+              <span>Laptop</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Laptop.html">Dell</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-microchip"></i>
+              <span>Main, CPU, VGA</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/CPU.html">CPU AMD</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li>
+              <i class="fa-solid fa-memory"></i>
+              <span>Ổ cứng, RAM, Thẻ nhớ</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/RAM.html">RAM DDR4</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-clock"></i>
+              <span>SMARTWATCH</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/SmartWatch.html">Smart Watch</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-keyboard"></i>
+              <span>Bàn phím</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Banphim.html">Bàn phím cơ VGN</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-desktop"></i>
+              <span>Màn hình</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="../pages/Manhinh.html">Asus</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-hands-helping"></i>
+              <span>Dịch vụ & khác</span>
+              <div class="submenu">
+                <ul>
+                  <li><a href="./Chinhsachbaohanh.html">Bảo hành</a></li>
+                  <li><a href="./dichvu.html">Lắp ráp</a></li>
+                  <li><a href="./dichvu.html">Vệ sinh</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+
+    <main class="careers-page">
       <div class="container">
-        <div class="contact-grid">
-          <div class="contact-info-panel">
-            <h2>Thông tin liên hệ</h2>
-            <div class="info-item">
-              <label>Trụ sở chính</label>
-              <p>Số 2, Đường Võ Oanh, Phường 25, Quận Bình Thạnh, TP.HCM</p>
+        <div class="careers-hero">
+          <h1>Gia nhập đội ngũ NexTech</h1>
+          <p>
+            Hãy cùng chúng tôi xây dựng một tương lai công nghệ đột phá. Chúng
+            tôi luôn tìm kiếm những tài năng trẻ, nhiệt huyết.
+          </p>
+        </div>
+
+        <div class="job-grid">
+          <div class="job-card">
+            <span class="job-tag">Kỹ thuật</span>
+            <span class="job-title">Nhân viên kỹ thuật UTH Service</span>
+            <div class="job-info">
+              <span>📍 Quận Bình Thạnh</span>
+              <span>💰 10 - 15 Triệu</span>
             </div>
-            <div class="info-item">
-              <label>Điện thoại</label>
-              <p>Bán hàng: 1900.0000<br />Hỗ trợ: 0947.236.123</p>
-            </div>
-            <div class="info-item">
-              <label>Email</label>
-              <p>contact@nextech.com.vn</p>
-            </div>
-            <div class="info-item">
-              <label>Giờ làm việc</label>
-              <p>Thứ 2 - Thứ 7: 08h00 - 21h00</p>
-            </div>
+            <p class="job-desc">
+              Lắp đặt, cài đặt phần mềm và bảo trì hệ thống máy tính cho khách
+              hàng tại cửa hàng và tận nơi.
+            </p>
+            <a href="#" class="apply-btn">Xem chi tiết</a>
           </div>
 
-          <div class="contact-form-panel">
-            <h2>Gửi lời nhắn</h2>
-            <form>
-              <div class="form-group">
-                <label>Họ và tên</label>
-                <input type="text" placeholder="Nhập tên của bạn" />
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input type="email" placeholder="Nhập email" />
-              </div>
-              <div class="form-group">
-                <label>Nội dung</label>
-                <textarea rows="4" placeholder="Bạn cần hỗ trợ gì?"></textarea>
-              </div>
-              <button type="submit" class="submit-contact">GỬI YÊU CẦU</button>
-            </form>
+          <div class="job-card">
+            <span class="job-tag">Kinh doanh</span>
+            <span class="job-title">Chuyên viên tư vấn sản phẩm</span>
+            <div class="job-info">
+              <span>📍 Toàn hệ thống</span>
+              <span>💰 8 - 20 Triệu</span>
+            </div>
+            <p class="job-desc">
+              Tư vấn các dòng Laptop, PC cao cấp phù hợp với nhu cầu của khách
+              hàng. Ưu tiên đam mê công nghệ.
+            </p>
+            <a href="#" class="apply-btn">Xem chi tiết</a>
+          </div>
+
+          <div class="job-card">
+            <span class="job-tag">Marketing</span>
+            <span class="job-title">Content Creator (Công nghệ)</span>
+            <div class="job-info">
+              <span>📍 Văn phòng chính</span>
+              <span>💰 Thỏa thuận</span>
+            </div>
+            <p class="job-desc">
+              Sáng tạo nội dung về review sản phẩm mới, cập nhật tin tức công
+              nghệ trên Fanpage và Website.
+            </p>
+            <a href="#" class="apply-btn">Xem chi tiết</a>
           </div>
         </div>
 
-        <div class="map-container">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.088706758402!2d106.7141372122738!3d10.804517789301538!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175293dceb22197%3A0x755bb0f39a48d4a6!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBHaWFvIFRow7RuZyBW4bqtbiBU4bqjaSBUaMOgbmggUGjhu5EgSOG7kyBDaMOtIE1pbmggLSBDxqEgc-G7nyAx!5e0!3m2!1svi!2s!4v1774495731928!5m2!1svi!2s"
-            width="600"
-            height="450"
-            style="border: 0"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
+        <div class="hr-contact">
+          <h3>Bạn chưa tìm thấy vị trí phù hợp?</h3>
+          <p>
+            Đừng ngần ngại gửi CV cho chúng tôi qua email:
+            <strong>tuyendung@nextech.com.vn</strong>
+          </p>
+          <p>Chúng tôi sẽ liên hệ với bạn ngay khi có vị trí mới phù hợp.</p>
         </div>
       </div>
     </main>
@@ -463,8 +571,10 @@
           <h3>Về Nexa Tech</h3>
           <ul class="hover-col">
             <li><a href="./Gioithieu.html">Giới thiệu</a></li>
-            <li><a href="./Tuyendung.html">Tuyển dụng</a></li>
-            <li><a style="color: #0076df" href="./Lienhe.html">Liên hệ</a></li>
+            <li style="color: #0076df">
+              <a href="./Tuyendung.html">Tuyển dụng</a>
+            </li>
+            <li><a href="./Lienhe.html">Liên hệ</a></li>
           </ul>
           <div class="social-links">
             <div class="social-wrapper">
@@ -516,6 +626,9 @@
         </div>
       </div>
     </footer>
+    <script src="../scripts/api-config.js"></script>
+    <script src="../scripts/scripts.js"></script>
+    <script src="../scripts/sidebar.js"></script>
     <script src="../scripts/CheckLogin.js"></script>
   </body>
 </html>

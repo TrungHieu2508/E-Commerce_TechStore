@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chính sách bảo mật thông tin - NexTech</title>
+    <title>Tra cứu bảo hành - NexTech</title>
     <link rel="stylesheet" href="../assets/CSS/styles.css" />
     <link rel="stylesheet" href="../assets/CSS/product-detail.css" />
     <link
@@ -12,15 +12,13 @@
     />
     <link rel="icon" href="../assets/img/LOGO1.png" type="image/x-icon" />
     <style>
-      /* Container dùng chung */
+      /* ----- CSS CỦA HEADER & FOOTER BẠN CUNG CẤP ----- */
       .container {
         max-width: 1200px;
         width: 100%;
         margin: 0 auto;
         padding: 0 15px;
       }
-
-      /* --- Header Promotion --- */
       .header-promotion {
         background-color: #0080ff;
         display: flex;
@@ -32,7 +30,6 @@
         color: white;
         font-weight: bold;
       }
-
       .promo-button {
         background: linear-gradient(to bottom, #ffdb2c 0%, #ff9500 100%);
         color: #ffffff;
@@ -42,8 +39,6 @@
         border: 1px solid #e68a00;
         cursor: pointer;
       }
-
-      /* --- Main Header --- */
       .main-header {
         background-color: #1a234a;
         color: white;
@@ -53,40 +48,41 @@
         top: 0;
         z-index: 1000;
       }
-
       .header-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
-
       .logo-img {
         max-height: 90px;
       }
-
       .search-bar {
         display: flex;
         flex-grow: 0.6;
         background: white;
         border-radius: 5px;
+        overflow: hidden;
         margin: 0 20px;
-        position: relative;
-        overflow: visible; /* 🔥 FIX */
       }
-
       .search-bar input {
         border: none;
         padding: 10px 15px;
         width: 100%;
         outline: none;
+        color: #333;
       }
-
+      .search-bar button {
+        background: none;
+        border: none;
+        padding: 0 15px;
+        cursor: pointer;
+        color: #1a234a;
+      }
       .header-tools {
         display: flex;
         gap: 20px;
         align-items: center;
       }
-
       .category-btn,
       .login-btn {
         background-color: #0076df;
@@ -97,28 +93,29 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        color: white;
+        text-decoration: none;
       }
-
       .tool-item {
         display: flex;
         align-items: center;
         gap: 8px;
         font-size: 11px;
+        color: white;
+        text-decoration: none;
       }
       .tool-item i {
         font-size: 18px;
         color: #007bff;
       }
-
-      /* --- Sub Nav --- */
       .sub-nav {
         background: white;
         border-bottom: 1px solid #ddd;
         padding: 12px 0;
-        z-index: 1;
+        z-index: 900;
+        position: sticky;
         top: 100px;
       }
-
       .sub-nav-flex {
         display: flex;
         justify-content: space-between;
@@ -131,126 +128,19 @@
         align-items: center;
         gap: 7px;
         color: #444;
+        text-decoration: none;
       }
-
-      /* --- CSS NỘI DUNG CHÍNH SÁCH MỚI --- */
-      .policy-container {
-        background-color: #f4f7f9;
-        padding: 50px 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      .policy-content {
-        background: #ffffff;
-        padding: 60px;
-        border-radius: 4px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        color: #333;
-        line-height: 1.8;
-      }
-
-      .policy-content h1 {
-        color: #1a234a;
-        font-size: 26px;
-        text-align: center;
-        margin-bottom: 25px;
-        font-weight: 800;
-        text-transform: uppercase;
-      }
-
-      .policy-intro {
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto 40px;
-        color: #555;
-        font-size: 16px;
-      }
-
-      .policy-section {
-        margin-bottom: 40px;
-      }
-
-      .policy-section h2 {
-        color: #0076df;
-        font-size: 18px;
-        text-transform: uppercase;
-        margin-bottom: 15px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #eee;
-        font-weight: 700;
-      }
-
-      .policy-section h3 {
-        font-size: 16px;
-        color: #1a234a;
-        margin-top: 15px;
-        margin-bottom: 5px;
-        font-weight: 600;
-      }
-
-      .policy-section p {
-        margin-bottom: 10px;
-      }
-
-      .policy-list {
-        list-style: none;
-        padding-left: 0;
-      }
-
-      .policy-list li {
-        position: relative;
-        padding-left: 20px;
-        margin-bottom: 8px;
-      }
-
-      .policy-list li::before {
-        content: "•";
-        color: #0076df;
-        font-weight: bold;
-        position: absolute;
-        left: 0;
-      }
-
-      .admin-contact {
-        background-color: #f8f9fa;
-        border: 1px solid #e9ecef;
-        padding: 30px;
-        margin-top: 50px;
-        border-radius: 4px;
-      }
-
-      .admin-contact h2 {
-        border-bottom: none;
-        margin-bottom: 20px;
-        color: #1a234a;
-      }
-
-      .contact-info p {
-        margin-bottom: 5px;
-        display: flex;
-        justify-content: flex-start;
-      }
-
-      .contact-label {
-        font-weight: bold;
-        min-width: 140px;
-        color: #555;
-      }
-
-      /* --- Footer --- */
       .main-footer {
         background-color: white;
         padding: 50px 0;
         border-top: 1px solid #eee;
         margin-top: 50px;
       }
-
       .footer-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 30px;
       }
-
       .footer-col h3 {
         font-size: 18px;
         margin-bottom: 20px;
@@ -262,6 +152,10 @@
         color: #666;
         list-style: none;
       }
+      .hover-col li a {
+        text-decoration: none;
+        color: #666;
+      }
       .hover-col li a:hover {
         color: #0076df;
       }
@@ -269,20 +163,171 @@
         color: #007bff;
         font-weight: bold;
       }
-
       .social-links {
-        margin-top: 60px;
+        margin-top: 30px;
         border-top: 1px solid #eee;
         padding-top: 15px;
       }
       .social-wrapper {
         display: flex;
-        align-items: center;
-        gap: 15px;
+        flex-direction: column;
+        gap: 10px;
       }
       .icons {
         display: flex;
         gap: 12px;
+      }
+
+      /* ----- CSS PHẦN TRA CỨU BẢO HÀNH (GIAO DIỆN CHÍNH) ----- */
+      .warranty-body {
+        background-color: #f0f7ff;
+        padding: 60px 0;
+        min-height: 600px;
+      }
+      .warranty-card {
+        background: #fff;
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      }
+      .warranty-card h1 {
+        color: #1a234a;
+        text-align: center;
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+      .warranty-card .subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+      }
+
+      /* Tab styling */
+      .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+      .tab-item {
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: 600;
+        color: #888;
+        transition: 0.3s;
+        position: relative;
+      }
+      .tab-item.active {
+        color: #0076df;
+      }
+      .tab-item.active::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #0076df;
+      }
+
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.4s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1.5px solid #ddd;
+        border-radius: 8px;
+        outline: none;
+        transition: 0.3s;
+        font-size: 15px;
+      }
+      .form-group input:focus {
+        border-color: #0076df;
+        box-shadow: 0 0 5px rgba(0, 118, 223, 0.1);
+      }
+      .form-group input.error {
+        border-color: #ff4d4d;
+        background: #fff8f8;
+      }
+
+      .error-msg {
+        color: #ff4d4d;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .btn-lookup {
+        width: 100%;
+        padding: 14px;
+        background: #0076df;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-lookup:hover {
+        background: #1a234a;
+      }
+
+      .result-box {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        border: 1px solid #eee;
+        display: none;
+      }
+      .result-box h3 {
+        font-size: 18px;
+        color: #28a745;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+      }
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .result-item span:first-child {
+        color: #666;
+      }
+      .result-item span:last-child {
+        font-weight: 600;
+        color: #333;
       }
 
       @media (max-width: 992px) {
@@ -296,9 +341,6 @@
         .main-header {
           height: auto;
           padding: 15px 0;
-        }
-        .policy-content {
-          padding: 30px 20px;
         }
       }
     </style>
@@ -495,149 +537,75 @@
       </div>
     </div>
 
-    <main class="policy-container">
+    <main class="warranty-body">
       <div class="container">
-        <article class="policy-content">
-          <h1>CHÍNH SÁCH BẢO MẬT THÔNG TIN – NEXTECH</h1>
-
-          <p class="policy-intro">
-            Tại NexTech, chúng tôi hiểu rằng sự riêng tư của khách hàng là ưu
-            tiên hàng đầu. Chính sách này mô tả cách chúng tôi thu thập, sử dụng
-            và bảo vệ thông tin cá nhân mà quý khách cung cấp khi truy cập và
-            mua sắm tại hệ thống website NexTech.
+        <div class="warranty-card">
+          <h1>Tra cứu bảo hành</h1>
+          <p class="subtitle">
+            Kiểm tra thông tin bảo hành và thời hạn sử dụng sản phẩm
           </p>
 
-          <section class="policy-section">
-            <h2>1. MỤC ĐÍCH THU THẬP THÔNG TIN</h2>
-            <p>
-              NexTech thu thập thông tin cá nhân của khách hàng nhằm các mục
-              đích sau:
-            </p>
-            <ul class="policy-list">
-              <li>
-                <strong>Xử lý đơn hàng:</strong> Xác nhận thông tin, liên hệ
-                giao nhận hàng và xuất hóa đơn.
-              </li>
-              <li>
-                <strong>Hỗ trợ kỹ thuật:</strong> Cung cấp dịch vụ bảo trì, lắp
-                đặt thông qua đội ngũ UTH Service.
-              </li>
-              <li>
-                <strong>Chăm sóc khách hàng:</strong> Giải đáp thắc mắc, xử lý
-                khiếu nại và các vấn đề hậu mãi.
-              </li>
-              <li>
-                <strong>Cập nhật ưu đãi:</strong> Gửi thông tin về sản phẩm công
-                nghệ mới, chương trình khuyến mãi (chỉ khi có sự đồng ý của
-                khách hàng).
-              </li>
-            </ul>
-          </section>
-
-          <section class="policy-section">
-            <h2>2. PHẠM VI THU THẬP THÔNG TIN</h2>
-            <p>Các thông tin chúng tôi thu thập bao gồm:</p>
-            <ul class="policy-list">
-              <li>Họ và tên.</li>
-              <li>Số điện thoại liên lạc.</li>
-              <li>Địa chỉ nhận hàng (nhà riêng hoặc cơ quan).</li>
-              <li>Email (để nhận thông báo đơn hàng và hóa đơn điện tử).</li>
-              <li>Lịch sử mua hàng và yêu cầu dịch vụ kỹ thuật.</li>
-            </ul>
-          </section>
-
-          <section class="policy-section">
-            <h2>3. PHẠM VI SỬ DỤNG THÔNG TIN</h2>
-            <p>
-              Chúng tôi cam kết chỉ sử dụng thông tin của khách hàng trong nội
-              bộ NexTech và chia sẻ có giới hạn cho các bên đối tác trực tiếp
-              thực hiện đơn hàng:
-            </p>
-            <ul class="policy-list">
-              <li>
-                <strong>Đơn vị vận chuyển:</strong> Cung cấp tên, số điện thoại
-                và địa chỉ để giao hàng.
-              </li>
-              <li>
-                <strong>Đơn vị kỹ thuật (UTH Service):</strong> Cung cấp thông
-                tin để thực hiện lắp đặt và bảo trì tại nhà.
-              </li>
-              <li>
-                <strong>Cơ quan pháp luật:</strong> Chỉ khi có yêu cầu bằng văn
-                bản từ cơ quan có thẩm quyền theo quy định của pháp luật Việt
-                Nam.
-              </li>
-            </ul>
-          </section>
-
-          <section class="policy-section">
-            <h2>4. THỜI GIAN LƯU TRỮ THÔNG TIN</h2>
-            <p>
-              Thông tin cá nhân của quý khách sẽ được lưu trữ an toàn trên hệ
-              thống máy chủ của NexTech cho đến khi đơn hàng hoàn tất hoặc cho
-              đến khi khách hàng có yêu cầu hủy bỏ thông tin đã cung cấp.
-            </p>
-          </section>
-
-          <section class="policy-section">
-            <h2>5. CAM KẾT BẢO MẬT THÔNG TIN</h2>
-            <ul class="policy-list">
-              <li>
-                <strong>An toàn dữ liệu:</strong> NexTech sử dụng các giao thức
-                bảo mật (SSL/TLS) để mã hóa thông tin trong quá trình truyền tải
-                trên môi trường internet.
-              </li>
-              <li>
-                <strong>Không mua bán thông tin:</strong> Chúng tôi cam kết
-                tuyệt đối không bán, không chia sẻ thông tin khách hàng cho bên
-                thứ ba vì mục đích thương mại.
-              </li>
-              <li>
-                <strong>Xử lý sự cố:</strong> Trong trường hợp máy chủ bị tấn
-                công dẫn đến mất mát dữ liệu, NexTech sẽ có trách nhiệm thông
-                báo cho cơ quan chức năng và khách hàng trong thời gian sớm
-                nhất.
-              </li>
-            </ul>
-          </section>
-
-          <section class="policy-section">
-            <h2>6. QUYỀN LỢI CỦA KHÁCH HÀNG</h2>
-            <p>Quý khách có quyền:</p>
-            <ul class="policy-list">
-              <li>
-                Yêu cầu kiểm tra, cập nhật hoặc điều chỉnh thông tin cá nhân của
-                mình.
-              </li>
-              <li>
-                Yêu cầu NexTech ngưng gửi các thông tin quảng cáo hoặc xóa bỏ
-                hoàn toàn dữ liệu cá nhân trên hệ thống.
-              </li>
-              <li>
-                Khiếu nại nếu phát hiện thông tin cá nhân bị sử dụng sai mục
-                đích đã cam kết.
-              </li>
-            </ul>
-          </section>
-
-          <section class="admin-contact">
-            <h2>LIÊN HỆ QUẢN TRỊ DỮ LIỆU</h2>
-            <div class="contact-info">
-              <p>
-                <span class="contact-label">Đơn vị quản lý:</span> Cửa hàng Công
-                nghệ NexTech
-              </p>
-              <p>
-                <span class="contact-label">Địa chỉ:</span> Số 2, Đường Võ Oanh
-                (D3 cũ), Phường 25, Quận Bình Thạnh, TP.HCM
-              </p>
-              <p><span class="contact-label">Hotline:</span> 0947.236.123</p>
-              <p>
-                <span class="contact-label">Email:</span> privacy@nextech.com
-              </p>
+          <div class="tabs">
+            <div class="tab-item active" onclick="switchTab('tab-phone')">
+              Số điện thoại
             </div>
-          </section>
-        </article>
+            <div class="tab-item" onclick="switchTab('tab-imei')">
+              IMEI / Serial
+            </div>
+          </div>
+
+          <div id="tab-phone" class="tab-content active">
+            <div class="form-group">
+              <label>Số điện thoại mua hàng</label>
+              <input
+                type="tel"
+                id="inputPhone"
+                placeholder="Nhập số điện thoại đã đăng ký..."
+              />
+              <div class="error-msg" id="errPhone">
+                Vui lòng không để trống số điện thoại.
+              </div>
+            </div>
+            <button class="btn-lookup" onclick="handleLookup('phone')">
+              TRA CỨU NGAY
+            </button>
+          </div>
+
+          <div id="tab-imei" class="tab-content">
+            <div class="form-group">
+              <label>Số Serial hoặc mã IMEI</label>
+              <input
+                type="text"
+                id="inputImei"
+                placeholder="Nhập mã S/N hoặc IMEI sản phẩm..."
+              />
+              <div class="error-msg" id="errImei">
+                Vui lòng nhập mã IMEI hoặc Serial.
+              </div>
+            </div>
+            <button class="btn-lookup" onclick="handleLookup('imei')">
+              TRA CỨU NGAY
+            </button>
+          </div>
+
+          <div id="resultBox" class="result-box">
+            <h3>Thông tin sản phẩm</h3>
+            <div class="result-item">
+              <span>Tên sản phẩm:</span
+              ><span id="resName">Laptop Gaming Asus TUF F15</span>
+            </div>
+            <div class="result-item">
+              <span>Ngày kích hoạt:</span><span id="resDate">12/10/2024</span>
+            </div>
+            <div class="result-item">
+              <span>Hạn bảo hành:</span><span id="resExp">12/10/2026</span>
+            </div>
+            <div class="result-item">
+              <span>Trạng thái:</span
+              ><span style="color: #28a745">Còn bảo hành</span>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 
@@ -670,11 +638,9 @@
         <div class="footer-col">
           <h3>Chính sách</h3>
           <ul class="hover-col">
-            <li><a href="">Chính sách bảo hành</a></li>
+            <li><a href="./Chinhsachbaohanh.html">Chính sách bảo hành</a></li>
             <li><a href="./Chinhsachgiaohang.html">Chính sách giao hàng</a></li>
-            <li style="color: #0076df">
-              <a href="./Chinhsachbaomat.html">Chính sách bảo mật</a>
-            </li>
+            <li><a href="./Chinhsachbaomat.html">Chính sách bảo mật</a></li>
           </ul>
         </div>
 
@@ -694,17 +660,73 @@
             <li>Mua hàng: <span class="blue-text">1900.0000</span></li>
             <li>Bảo hành: <span class="blue-text">1900.0001</span></li>
             <li>Khiếu nại: <span class="blue-text">1900.0002</span></li>
-            <li>Email: <span class="blue-text">hihi123@ut.edu.vn</span></li>
+            <li>
+              Email: <span class="blue-text">support@nextech.com.vn</span>
+            </li>
           </ul>
-          <div class="partner-logo">
-            <img src="../assets/img/GHN.png" alt="Giao Hàng Nhanh" />
-          </div>
         </div>
       </div>
     </footer>
     <script src="../scripts/api-config.js"></script>
     <script src="../scripts/scripts.js"></script>
     <script src="../scripts/sidebar.js"></script>
+    <script>
+      // Chuyển đổi giữa các tab
+      function switchTab(tabId) {
+        // Reset lỗi và ẩn kết quả khi chuyển tab
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((c) => c.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-item")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById("resultBox").style.display = "none";
+
+        document.getElementById(tabId).classList.add("active");
+        event.currentTarget.classList.add("active");
+      }
+
+      // Xử lý khi nhấn nút tra cứu
+      function handleLookup(type) {
+        let input =
+          type === "phone"
+            ? document.getElementById("inputPhone")
+            : document.getElementById("inputImei");
+        let errorMsg =
+          type === "phone"
+            ? document.getElementById("errPhone")
+            : document.getElementById("errImei");
+        let resultBox = document.getElementById("resultBox");
+
+        // Reset trạng thái
+        input.classList.remove("error");
+        errorMsg.style.display = "none";
+        resultBox.style.display = "none";
+
+        // Kiểm tra bỏ trống
+        if (input.value.trim() === "") {
+          input.classList.add("error");
+          errorMsg.style.display = "block";
+          input.focus();
+          return;
+        }
+
+        // Giả lập hiển thị kết quả (Nếu không trống)
+        setTimeout(() => {
+          resultBox.style.display = "block";
+          resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 300);
+      }
+
+      // Xóa báo lỗi khi người dùng gõ lại
+      document.querySelectorAll("input").forEach((inp) => {
+        inp.addEventListener("input", function () {
+          this.classList.remove("error");
+          const err = this.parentElement.querySelector(".error-msg");
+          if (err) err.style.display = "none";
+        });
+      });
+    </script>
     <script src="../scripts/CheckLogin.js"></script>
   </body>
 </html>
